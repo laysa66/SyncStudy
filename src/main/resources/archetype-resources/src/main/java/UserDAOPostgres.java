@@ -37,6 +37,7 @@ class UserDAOPostgres extends UserDAO {
             pstmt.setString(1, u);
             ResultSet res = pstmt.executeQuery();
             if (res.getFetchSize() > 0) {
+                //TODO
                 //what's the type of that foundData ? it's the first element of a ResultSet
                 // but I can't seem to understand what it represents
                 foundData = res.first();
@@ -55,6 +56,7 @@ class UserDAOPostgres extends UserDAO {
                 return foundUser;
             }
             else {
+                //TODO
                 //need to take care of cases where there's no request result
                 //Lysa help please :)
             }
@@ -80,5 +82,7 @@ class UserDAOPostgres extends UserDAO {
         String sql = "SELECT username,passwordHash FROM users WHERE username=?";
         PreparedStatement pstmt = conn.prepareStatement(sql);
         pstmt.setString(1, u);
+        //TODO
+        //don't know how to end this :)
     }
 }
