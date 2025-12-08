@@ -36,14 +36,13 @@ class UserDAOPostgres extends UserDAO {
         try (PreparedStatement pstmt = conn.prepareStatement(sql);) {
             pstmt.setString(1, u);
             ResultSet res = pstmt.executeQuery();
-            if (res.getFetchSize() > 0) {
+            if (res.next()) {
                 //TODO
                 //what's the type of that foundData ? it's the first element of a ResultSet
                 // but I can't seem to understand what it represents
-                foundData = res.first();
-                Long id = foundData.getLong("id");
-                String username = foundData.getString("username");
-                String pwdHash = foundData.getString("passwordHash");
+                Long id = res.getLong("id");
+                String username = res.getString("username");
+                String pwdHash = res.getString("passwordHash");
 
                 //print to check it works, remove if okay, just for debug
                 System.out.println(
@@ -52,13 +51,10 @@ class UserDAOPostgres extends UserDAO {
                                 + "username : "+username+"\n"
                                 + "password hash : "+pwdHash
                 );
-                User foundUser = new User(id,username,pwdHash);
-                return foundUser;
+                return new User(id, username, pwdHash);
             }
             else {
-                //TODO
-                //need to take care of cases where there's no request result
-                //Lysa help please :)
+                return null;
             }
 
         }
@@ -80,9 +76,17 @@ class UserDAOPostgres extends UserDAO {
     //returns true if username u exists in the database and has pwd as password
     public boolean checkCredentials(String u, String pwd) {
         String sql = "SELECT username,passwordHash FROM users WHERE username=?";
-        PreparedStatement pstmt = conn.prepareStatement(sql);
-        pstmt.setString(1, u);
-        //TODO
-        //don't know how to end this :)
+        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, u);
+            ResultSet res = pstmt.executeQuery();
+            if (res.next()) {
+                String storedHash = res.getString("passwordHash");
+                //compares password with stored hash
+                return pwd.equals(storedHash);
+            }
+            else {
+                //no user
+                return false;
+            }
     }
 }
