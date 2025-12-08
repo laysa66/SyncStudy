@@ -1,23 +1,25 @@
+package persistence;
+
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 
 class UserDAOPostgres extends UserDAO {
-    private static final String DBURL;
-    private static final String DBUSER;
-    private static final String DBPWD;
+    private Connection conn;
 
     //empty constructor
     public UserDAOPostgres() {}
 
     //constructor that actually does the job with information
-    public UserDAOPostgres() {
-
+    public UserDAOPostgres(Connection conn) {
+        this.conn = conn;
     }
 
     //creates a users table in the database
-    public void createTableUsers(Connection conn) throws SQLException {
+    public void createTableUsers() throws SQLException {
         String sql = "CREATE TABLE IF NOT EXISTS users ("
                 +"id SERIAL PRIMARY KEY,"
                 +"username VARCHAR(50) NOT NULL,"
@@ -34,42 +36,49 @@ class UserDAOPostgres extends UserDAO {
         try (PreparedStatement pstmt = conn.prepareStatement(sql);) {
             pstmt.setString(1, u);
             ResultSet res = pstmt.executeQuery();
-            //don't know if while loop is necessary here
-            while (res.next()) {
-                Long id = res.getLong("id");
-                String username = res.getString("username");
-                String pwdHash = res.getString("passwordHash");
+            if (res.getFetchSize() > 0) {
+                //what's the type of that foundData ? it's the first element of a ResultSet
+                // but I can't seem to understand what it represents
+                foundData = res.first();
+                Long id = foundData.getLong("id");
+                String username = foundData.getString("username");
+                String pwdHash = foundData.getString("passwordHash");
 
-                //print to check it works
+                //print to check it works, remove if okay, just for debug
                 System.out.println(
                         "User \n"
                                 + "id : "+id+"\n"
                                 + "username : "+username+"\n"
                                 + "password hash : "+pwdHash
                 );
-                //need to take care of cases where there's no request result or several of them
                 User foundUser = new User(id,username,pwdHash);
                 return foundUser;
+            }
+            else {
+                //need to take care of cases where there's no request result
+                //Lysa help please :)
             }
 
         }
     }
 
     //insert a User in the database using a username u and a password hash pwdHash
-    public void insertUser(Connection conn, String u, String pwdHash) throws SQLException {
+    public void insertUser(String u, String pwdHash) throws SQLException {
         String sql = "INSERT INTO users (username,passwordHash) VALUES (?,?)";
         PreparedStatement pstmt = conn.prepareStatement(sql);
         pstmt.setString(1, u);
         pstmt.setString(2, pwdHash);
-        /* I don't know if we need that
+        /* I don't know if we need that, it's just to print number of rows changed, might just be debug
         int rowsAffected = pstmt.executeUpdate();
-        System.out.println(rowsAffected+" livre(s) ajouté(s)");
+        System.out.println(rowsAffected+" user(s) ajouté(s)");
          */
         pstmt.close();
     }
 
     //returns true if username u exists in the database and has pwd as password
     public boolean checkCredentials(String u, String pwd) {
-
+        String sql = "SELECT username,passwordHash FROM users WHERE username=?";
+        PreparedStatement pstmt = conn.prepareStatement(sql);
+        pstmt.setString(1, u);
     }
-  }
+}
