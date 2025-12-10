@@ -20,9 +20,9 @@ class PostgresFactory extends AbstractFactory {
     //TODO: laysa mets tout sa dans un env docker
     //creates connection to database
     public Connection createConnection() {
-        this.DBURL = "jdbc:postgresql://postgres-db:5432/syncstudy";
-        this.DBUSER = "postgres";
-        this.DBPWD = "postgres";
+        this.DBURL = "jdbc:postgresql://postgres-syncstudy:5432/syncstudy";
+        this.DBUSER = "user";
+        this.DBPWD = "pwd";
         return DriverManager.getConnection(DBURL,DBUSER,DBPWD);
     }
 
