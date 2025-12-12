@@ -20,54 +20,31 @@ public class LoginController {
     @FXML
     private Label messageLabel;
 
-    @FXML
-    private void initialize() {
-        if (messageLabel != null) {
-            messageLabel.setText("");
-        }
+    private UserManager userManager;
+
+
+    // injected by AppUI after FXMLLoader.load()
+    public void setUserManager(UserManager userManager) {
+        this.userManager = userManager;
     }
 
     @FXML
     private void onLogin() {
-        String username = usernameField == null || usernameField.getText() == null
-                ? "" : usernameField.getText().trim();
-        String password = passwordField == null || passwordField.getText() == null
-                ? "" : passwordField.getText();
-
-        if (username.isEmpty()) {
-            setMessage("Please enter username.");
+        if (userManager == null) {
+            messageLabel.setText("Internal error: UserManager not available.");
             return;
         }
+        String username = usernameField.getText();
+        String password = passwordField.getText();
 
-        // Use SessionFacade for authentication (wraps UserManager)
-        boolean ok = SessionFacade.getInstance().login(username, password);
+        boolean ok = userManager.checkCredentials(username, password);
         if (ok) {
-            String display = username;
-            try {
-                User u = UserManager.getInstance().findUserByUsername(username);
-                if (u != null) {
-                    // try common getters without assuming specific API
-                    try {
-                        display = (String) u.getClass().getMethod("getDisplayName").invoke(u);
-                    } catch (NoSuchMethodException e1) {
-                        try {
-                            display = (String) u.getClass().getMethod("getUsername").invoke(u);
-                        } catch (NoSuchMethodException e2) {
-                            display = u.toString();
-                        }
-                    }
-                    if (display == null || display.trim().isEmpty()) {
-                        display = username;
-                    }
-                }
-            } catch (Exception ignored) {
-                display = username;
-            }
-            setMessage("Welcome, " + display + "!");
-            // proceed to next view or notify application here
+            messageLabel.setText("Login successful");
+            // proceed to next screen
         } else {
-            setMessage("Invalid username or password.");
+            messageLabel.setText("Invalid username or password");
         }
+
     }
 
     private void setMessage(String msg) {

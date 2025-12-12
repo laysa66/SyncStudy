@@ -23,17 +23,8 @@ public class AppUI extends Application {
         Parent root = loader.load();
 
         Object controller = loader.getController();
-        if (controller != null) {
-            try {
-                Method m = controller.getClass().getMethod("setUserManager", UserManager.class);
-                if (m != null) {
-                    m.invoke(controller, UserManager.getInstance());
-                }
-            } catch (NoSuchMethodException ignored) {
-                // setter not present — fine
-            } catch (Exception e) {
-                System.err.println("Controller injection failed: " + e.getMessage());
-            }
+        if (controller instanceof LoginController) {
+            ((LoginController) controller).setUserManager(UserManager.getInstance());
         }
 
         stage.setTitle("SyncStudy - Login");
