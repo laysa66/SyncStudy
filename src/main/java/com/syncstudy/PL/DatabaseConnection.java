@@ -15,7 +15,7 @@ public class DatabaseConnection {
     private String dbPassword;
 
     private DatabaseConnection() {
-        this.dbUrl = "jdbc:postgresql://localhost:5432/suncstudydb";
+        this.dbUrl = "jdbc:postgresql://localhost:5432/syncstudy";
         this.dbUser = "postgres";
         this.dbPassword = "postgres";
     }
