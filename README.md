@@ -25,4 +25,10 @@ in a new terminal window, run:
 ```bash
 mvn clean javafx:run
 ```
+
+## 4. Open the Javadoc documentation in the browser(optional)
+```bash
+xdg-open target/site/apidocs/index.html
+```
+
 This will compile and launch the SyncStudy application and automatically connect to the PostgreSQL database.
