@@ -1,5 +1,5 @@
 package com.syncstudy.BL;
-//import com.syncstudy.PL.PostgresFactory;
+import com.syncstudy.PL.PostgresFactory;
 
 /**
  * Singleton UserManager handling user-related business logic
@@ -10,8 +10,8 @@ public class UserManager {
 
     private UserManager() {
         // Initialize with concrete factory (can be changed for other DB types)
-//        AbstractFactory factory = new PostgresFactory();
-//        this.userDAO = factory.createUserDAO();
+       AbstractFactory factory = new PostgresFactory();
+       this.userDAO = factory.createUserDAO();
     }
 
     /**
