@@ -19,21 +19,5 @@ services:
       timeout: 5s
       retries: 5
 
-  app:
-    platform: linux/amd64
-    build:
-      context: .
-      dockerfile: src/main/java/com/syncstudy/PL/Dockerfile
-    container_name: syncstudy-app
-    environment:
-      DB_URL: jdbc:postgresql://postgres:5432/syncstudy
-      DB_USER: postgres
-      DB_PASSWORD: postgres
-    ports:
-      - "8080:8080"
-    depends_on:
-      postgres:
-        condition: service_healthy
-
 volumes:
   postgres_data:

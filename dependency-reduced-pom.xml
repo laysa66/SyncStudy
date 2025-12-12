@@ -38,7 +38,7 @@
               <shadedClassifierName>shaded</shadedClassifierName>
               <transformers>
                 <transformer>
-                  <mainClass>com.syncstudy.App</mainClass>
+                  <mainClass>com.syncstudy.UI.AppUI</mainClass>
                 </transformer>
               </transformers>
             </configuration>
