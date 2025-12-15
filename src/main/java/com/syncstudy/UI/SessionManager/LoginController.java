@@ -1,9 +1,8 @@
 // java
-package com.syncstudy.UI;
+package com.syncstudy.UI.SessionManager;
 
-import com.syncstudy.BL.SessionFacade;
-import com.syncstudy.BL.User;
-import com.syncstudy.BL.UserManager;
+import com.syncstudy.BL.SessionManager.SessionFacade;
+import com.syncstudy.BL.SessionManager.UserManager;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
@@ -20,11 +19,11 @@ public class LoginController {
     @FXML
     private Label messageLabel;
 
-    private UserManager userManager;
+    private SessionFacade userManager;
 
 
     // injected by AppUI after FXMLLoader.load()
-    public void setUserManager(UserManager userManager) {
+    public void setUserManager(SessionFacade userManager) {
         this.userManager = userManager;
     }
 
@@ -37,7 +36,7 @@ public class LoginController {
         String username = usernameField.getText();
         String password = passwordField.getText();
 
-        boolean ok = userManager.checkCredentials(username, password);
+        boolean ok = userManager.login(username, password);
         if (ok) {
             messageLabel.setText("Login successful");
             // proceed to next screen

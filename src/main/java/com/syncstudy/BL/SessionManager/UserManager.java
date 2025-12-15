@@ -1,4 +1,5 @@
-package com.syncstudy.BL;
+package com.syncstudy.BL.SessionManager;
+import com.syncstudy.BL.AbstractFactory;
 import com.syncstudy.PL.PostgresFactory;
 
 /**

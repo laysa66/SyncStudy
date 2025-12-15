@@ -1,4 +1,4 @@
-package com.syncstudy.BL;
+package com.syncstudy.BL.SessionManager;
 
 
 /**

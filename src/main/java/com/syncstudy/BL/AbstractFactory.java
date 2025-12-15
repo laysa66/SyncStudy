@@ -1,5 +1,7 @@
 package com.syncstudy.BL;
 
+import com.syncstudy.BL.SessionManager.UserDAO;
+
 /**
  * Abstract Factory for creating DAO instances
  * Allows switching between different persistence implementations
