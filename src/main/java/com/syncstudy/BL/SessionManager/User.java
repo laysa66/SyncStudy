@@ -1,4 +1,4 @@
-package com.syncstudy.BL;
+package com.syncstudy.BL.SessionManager;
 
 /**
  * User entity representing a user in the system

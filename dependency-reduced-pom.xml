@@ -29,7 +29,7 @@
         <artifactId>javafx-maven-plugin</artifactId>
         <version>0.0.8</version>
         <configuration>
-          <mainClass>com.syncstudy.UI.AppUI</mainClass>
+          <mainClass>com.syncstudy.UI.SessionManager.AppUI</mainClass>
         </configuration>
       </plugin>
       <plugin>
@@ -46,7 +46,7 @@
               <shadedClassifierName>shaded</shadedClassifierName>
               <transformers>
                 <transformer>
-                  <mainClass>com.syncstudy.UI.AppUI</mainClass>
+                  <mainClass>com.syncstudy.UI.SessionManager.AppUI</mainClass>
                 </transformer>
               </transformers>
             </configuration>

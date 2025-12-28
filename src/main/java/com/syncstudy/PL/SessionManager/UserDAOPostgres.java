@@ -1,7 +1,8 @@
-package com.syncstudy.PL;
+package com.syncstudy.PL.SessionManager;
 
-import com.syncstudy.BL.User;
-import com.syncstudy.BL.UserDAO;
+import com.syncstudy.BL.SessionManager.User;
+import com.syncstudy.BL.SessionManager.UserDAO;
+import com.syncstudy.PL.DatabaseConnection;
 import org.mindrot.jbcrypt.BCrypt;
 
 import java.sql.Connection;

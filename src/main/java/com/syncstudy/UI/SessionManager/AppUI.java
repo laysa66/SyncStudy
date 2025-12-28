@@ -1,13 +1,13 @@
-package com.syncstudy.UI;
+package com.syncstudy.UI.SessionManager;
 
-import com.syncstudy.BL.UserManager;
+import com.syncstudy.BL.SessionManager.SessionFacade;
+import com.syncstudy.BL.SessionManager.UserManager;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
-import java.lang.reflect.Method;
 import java.net.URL;
 
 public class AppUI extends Application {
@@ -24,7 +24,7 @@ public class AppUI extends Application {
 
         Object controller = loader.getController();
         if (controller instanceof LoginController) {
-            ((LoginController) controller).setUserManager(UserManager.getInstance());
+            ((LoginController) controller).setUserManager(SessionFacade.getInstance());
         }
 
         stage.setTitle("SyncStudy - Login");

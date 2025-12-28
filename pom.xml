@@ -26,23 +26,19 @@
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-controls</artifactId>
             <version>21.0.2</version>
+            <classifier>linux</classifier>
         </dependency>
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-fxml</artifactId>
             <version>21.0.2</version>
+            <classifier>linux</classifier>
         </dependency>
         <dependency>
             <groupId>org.mindrot</groupId>
             <artifactId>jbcrypt</artifactId>
             <version>0.4</version>
         </dependency>
-        <dependency>
-            <groupId>io.github.cdimascio</groupId>
-            <artifactId>dotenv-java</artifactId>
-            <version>3.0.0</version>
-        </dependency>
-
 
     </dependencies>
 
@@ -76,15 +72,6 @@
                 <version>0.0.8</version>
                 <configuration>
                     <mainClass>com.syncstudy.UI.AppUI</mainClass>
-                    <options>
-                        <option>-Dfile.encoding=UTF-8</option>
-                    </options>
-                    <commandlineArgs></commandlineArgs>
-                    <environmentVariables>
-                        <DB_URL>jdbc:postgresql://ferhatsn.fr:5432/syncstudy</DB_URL>
-                        <DB_USER>postgres</DB_USER>
-                        <DB_PASSWORD>postgres</DB_PASSWORD>
-                    </environmentVariables>
                 </configuration>
             </plugin>
 

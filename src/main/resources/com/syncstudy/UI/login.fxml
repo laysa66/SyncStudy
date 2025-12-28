@@ -11,7 +11,7 @@
 <?import javafx.scene.layout.VBox?>
 
 <VBox xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="com.syncstudy.UI.LoginController"
+      fx:controller="com.syncstudy.UI.SessionManager.LoginController"
       alignment="CENTER" spacing="12">
     <padding>
         <Insets top="20" right="20" bottom="20" left="20"/>
