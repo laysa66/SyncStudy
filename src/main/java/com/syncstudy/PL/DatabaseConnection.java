@@ -1,5 +1,6 @@
 package com.syncstudy.PL;
 
+import io.github.cdimascio.dotenv.Dotenv;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -15,9 +16,34 @@ public class DatabaseConnection {
     private String dbPassword;
 
     private DatabaseConnection() {
-        this.dbUrl = "jdbc:postgresql://localhost:5432/syncstudy";
-        this.dbUser = "postgres";
-        this.dbPassword = "postgres";
+        // Load .env file from project root
+        Dotenv dotenv = Dotenv.configure()
+                .ignoreIfMissing()
+                .load();
+
+        // Try to get from .env first, then fall back to system environment variables
+        this.dbUrl = getEnvVariable(dotenv, "DB_URL");
+        this.dbUser = getEnvVariable(dotenv, "DB_USER");
+        this.dbPassword = getEnvVariable(dotenv, "DB_PASSWORD");
+
+        if (this.dbUrl == null || this.dbUser == null || this.dbPassword == null) {
+            throw new RuntimeException("Database configuration not found. Please create a .env file with DB_URL, DB_USER, and DB_PASSWORD or set them as environment variables.");
+        }
+
+        System.out.println("Database Configuration:");
+        System.out.println("URL: " + this.dbUrl);
+        System.out.println("User: " + this.dbUser);
+    }
+
+    /**
+     * Get environment variable from dotenv or system environment
+     */
+    private String getEnvVariable(Dotenv dotenv, String key) {
+        String value = dotenv.get(key);
+        if (value == null || value.isEmpty()) {
+            value = System.getenv(key);
+        }
+        return value;
     }
 
     /**
