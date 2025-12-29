@@ -1,0 +1,115 @@
+package com.syncstudy.UI.AdminManager;
+
+import com.syncstudy.BL.AdminManager.AdminFacade;
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.VBox;
+
+import java.io.IOException;
+
+/**
+ * Controller for Admin Dashboard
+ * Main navigation hub for admin features
+ */
+public class AdminDashboardController {
+
+    @FXML private BorderPane mainPane;
+    @FXML private VBox sidebar;
+    @FXML private Button usersButton;
+    @FXML private Label welcomeLabel;
+
+    private AdminFacade adminFacade;
+
+    /**
+     * Initialize the controller
+     */
+    @FXML
+    public void initialize() {
+        adminFacade = AdminFacade.getInstance();
+
+        // Set welcome message
+        if (welcomeLabel != null) {
+            welcomeLabel.setText("Welcome, Admin");
+        }
+
+        // Load user management by default
+        handleManageUsers();
+    }
+
+    /**
+     * Set the current admin user ID
+     * @param adminId admin user ID
+     */
+    public void setCurrentAdminId(Long adminId) {
+        adminFacade.setCurrentAdminId(adminId);
+    }
+
+    /**
+     * Handle Manage Users navigation
+     */
+    @FXML
+    public void handleManageUsers() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/syncstudy/UI/AdminManager/UserManagement.fxml"));
+            Parent userManagement = loader.load();
+            mainPane.setCenter(userManagement);
+
+            // Update button states
+            updateButtonStyles(usersButton);
+        } catch (IOException e) {
+            showError("Failed to load User Management: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Handle logout action
+     */
+    @FXML
+    public void handleLogout() {
+        adminFacade.setCurrentAdminId(null);
+        // Return to login screen
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/syncstudy/UI/login.fxml"));
+            Parent login = loader.load();
+            mainPane.getScene().setRoot(login);
+        } catch (IOException e) {
+            showError("Failed to logout: " + e.getMessage());
+        }
+    }
+
+    /**
+     * Update sidebar button styles
+     */
+    private void updateButtonStyles(Button activeButton) {
+        String defaultStyle = "-fx-background-color: transparent; -fx-text-fill: white; -fx-alignment: CENTER_LEFT; -fx-padding: 10 20;";
+        String activeStyle = "-fx-background-color: #495057; -fx-text-fill: white; -fx-alignment: CENTER_LEFT; -fx-padding: 10 20;";
+
+        // Reset all buttons
+        if (usersButton != null) {
+            usersButton.setStyle(defaultStyle);
+        }
+
+        // Set active button
+        if (activeButton != null) {
+            activeButton.setStyle(activeStyle);
+        }
+    }
+
+    /**
+     * Show error alert
+     */
+    private void showError(String message) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Error");
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
+}
+

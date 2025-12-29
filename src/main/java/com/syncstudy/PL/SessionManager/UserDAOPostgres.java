@@ -41,6 +41,7 @@ public class UserDAOPostgres extends UserDAO {
      * @param conn database connection
      */
     public void createTableUsers(Connection conn) {
+        // Create base table
         String sql = "CREATE TABLE IF NOT EXISTS users (" +
                 "id SERIAL PRIMARY KEY, " +
                 "username VARCHAR(100) UNIQUE NOT NULL, " +
@@ -52,6 +53,36 @@ public class UserDAOPostgres extends UserDAO {
         } catch (SQLException e) {
             System.err.println("Error creating table: " + e.getMessage());
         }
+
+        // Add admin columns if they don't exist
+        extendUsersTable(conn);
+    }
+
+    /**
+     * Extend users table with admin-related columns
+     */
+    private void extendUsersTable(Connection conn) {
+        String[] alterStatements = {
+            "ALTER TABLE users ADD COLUMN IF NOT EXISTS email VARCHAR(255)",
+            "ALTER TABLE users ADD COLUMN IF NOT EXISTS full_name VARCHAR(255)",
+            "ALTER TABLE users ADD COLUMN IF NOT EXISTS university VARCHAR(255)",
+            "ALTER TABLE users ADD COLUMN IF NOT EXISTS department VARCHAR(255)",
+            "ALTER TABLE users ADD COLUMN IF NOT EXISTS profile_photo VARCHAR(500)",
+            "ALTER TABLE users ADD COLUMN IF NOT EXISTS is_blocked BOOLEAN DEFAULT FALSE",
+            "ALTER TABLE users ADD COLUMN IF NOT EXISTS is_admin BOOLEAN DEFAULT FALSE",
+            "ALTER TABLE users ADD COLUMN IF NOT EXISTS registration_date TIMESTAMP DEFAULT NOW()",
+            "ALTER TABLE users ADD COLUMN IF NOT EXISTS last_login TIMESTAMP"
+        };
+
+        for (String sql : alterStatements) {
+            try (Statement stmt = conn.createStatement()) {
+                stmt.execute(sql);
+            } catch (SQLException e) {
+                // Column might already exist or other issue - continue
+                System.err.println("Note: " + e.getMessage());
+            }
+        }
+        System.out.println("Users table extended with admin columns.");
     }
 
     /**
@@ -81,18 +112,118 @@ public class UserDAOPostgres extends UserDAO {
      */
     private void insertDefaultUserIfNotExists(Connection conn) {
         try {
-            User existingUser = findUserByUsername("admin");
-            if (existingUser == null) {
-                String hashedPassword = BCrypt.hashpw("admin123", BCrypt.gensalt());
-                insertUser(conn, "admin", hashedPassword);
+            // Check if admin exists using simple query (only base columns)
+            String checkSql = "SELECT id FROM users WHERE username = 'admin'";
+            boolean adminExists = false;
+
+            try (Statement stmt = conn.createStatement();
+                 ResultSet rs = stmt.executeQuery(checkSql)) {
+                adminExists = rs.next();
             }
+
+            if (!adminExists) {
+                String hashedPassword = BCrypt.hashpw("admin123", BCrypt.gensalt());
+                String insertSql = "INSERT INTO users (username, password_hash, is_admin) VALUES (?, ?, TRUE)";
+                try (PreparedStatement pstmt = conn.prepareStatement(insertSql)) {
+                    pstmt.setString(1, "admin");
+                    pstmt.setString(2, hashedPassword);
+                    pstmt.executeUpdate();
+                    System.out.println("Default admin user created.");
+                }
+            } else {
+                // Make sure existing admin has is_admin = TRUE
+                String updateSql = "UPDATE users SET is_admin = TRUE WHERE username = 'admin'";
+                try (Statement stmt = conn.createStatement()) {
+                    stmt.executeUpdate(updateSql);
+                }
+            }
+
+            // Create test regular users
+            //todo : this only for me to test admin features, remove later
+            createTestUserIfNotExists(conn, "laysa.matmar", "password123", "Laysa Matmar", "lm@university.edu", "polytech montpellier", "Computer Science");
+            createTestUserIfNotExists(conn, "omar.hussein", "password123", "omar hussein Smith", "omar.smith@university.edu", "Stanford", "logics");
+            createTestUserIfNotExists(conn, "bob.recardo", "password123", "Bob Recardo Tokyo", "tokyo@university.edu", "Harvard", "Physics");
+
         } catch (Exception e) {
             System.err.println("Error creating default user: " + e.getMessage());
         }
     }
 
+    /**
+     * Create a test user if not exists
+     */
+    private void createTestUserIfNotExists(Connection conn, String username, String password,
+            String fullName, String email, String university, String department) {
+        try {
+            String checkSql = "SELECT id FROM users WHERE username = ?";
+            try (PreparedStatement pstmt = conn.prepareStatement(checkSql)) {
+                pstmt.setString(1, username);
+                try (ResultSet rs = pstmt.executeQuery()) {
+                    if (rs.next()) {
+                        return; // User already exists
+                    }
+                }
+            }
+
+            String hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt());
+            String insertSql = "INSERT INTO users (username, password_hash, full_name, email, university, department, is_admin, is_blocked) " +
+                    "VALUES (?, ?, ?, ?, ?, ?, FALSE, FALSE)";
+            try (PreparedStatement pstmt = conn.prepareStatement(insertSql)) {
+                pstmt.setString(1, username);
+                pstmt.setString(2, hashedPassword);
+                pstmt.setString(3, fullName);
+                pstmt.setString(4, email);
+                pstmt.setString(5, university);
+                pstmt.setString(6, department);
+                pstmt.executeUpdate();
+                System.out.println("Test user '" + username + "' created.");
+            }
+        } catch (SQLException e) {
+            System.err.println("Error creating test user " + username + ": " + e.getMessage());
+        }
+    }
+
     @Override
     public User findUserByUsername(String username) {
+        // Use columns that should exist after table extension
+        String sql = "SELECT id, username, password_hash, " +
+                "COALESCE(email, '') as email, " +
+                "COALESCE(full_name, '') as full_name, " +
+                "COALESCE(is_blocked, FALSE) as is_blocked, " +
+                "COALESCE(is_admin, FALSE) as is_admin " +
+                "FROM users WHERE username = ?";
+
+        try (Connection conn = dbConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setString(1, username);
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    User user = new User();
+                    user.setId(rs.getLong("id"));
+                    user.setUsername(rs.getString("username"));
+                    user.setPasswordHash(rs.getString("password_hash"));
+                    user.setEmail(rs.getString("email"));
+                    user.setFullName(rs.getString("full_name"));
+                    user.setBlocked(rs.getBoolean("is_blocked"));
+                    user.setAdmin(rs.getBoolean("is_admin"));
+                    return user;
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("Error finding user: " + e.getMessage());
+            // Fallback: try with basic columns only
+            return findUserByUsernameBasic(username);
+        }
+
+        return null;
+    }
+
+    /**
+     * Fallback method using only basic columns
+     */
+    private User findUserByUsernameBasic(String username) {
         String sql = "SELECT id, username, password_hash FROM users WHERE username = ?";
 
         try (Connection conn = dbConnection.getConnection();
@@ -110,7 +241,7 @@ public class UserDAOPostgres extends UserDAO {
                 }
             }
         } catch (SQLException e) {
-            System.err.println("Error finding user: " + e.getMessage());
+            System.err.println("Error finding user (basic): " + e.getMessage());
         }
 
         return null;

@@ -1,6 +1,7 @@
 package com.syncstudy.BL;
 
 import com.syncstudy.BL.SessionManager.UserDAO;
+import com.syncstudy.BL.AdminManager.AdminDAO;
 
 /**
  * Abstract Factory for creating DAO instances
@@ -13,4 +14,10 @@ public abstract class AbstractFactory {
      * @return UserDAO implementation
      */
     public abstract UserDAO createUserDAO();
+
+    /**
+     * Creates an AdminDAO instance
+     * @return AdminDAO implementation
+     */
+    public abstract AdminDAO createAdminDAO();
 }
