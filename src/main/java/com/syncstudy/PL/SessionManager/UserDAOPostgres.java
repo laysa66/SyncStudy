@@ -266,4 +266,108 @@ public class UserDAOPostgres extends UserDAO {
             return false;
         }
     }
+
+    @Override
+    public boolean createUser(String username, String passwordHash, String email, String fullName, String university, String department) {
+        String sql = "INSERT INTO users (username, password_hash, email, full_name, university, department, profile_photo, last_login) VALUES (?, ?, ?, ?, ?, ?, NULL, NOW()) " +
+                "ON CONFLICT (username) DO NOTHING";
+        boolean ok = false;
+        try (Connection conn = dbConnection.getConnection();
+                PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, username);
+            pstmt.setString(2, passwordHash);
+            pstmt.setString(3, email);
+            pstmt.setString(4, fullName);
+            pstmt.setString(5, university);
+            pstmt.setString(6, department);
+            int rows = pstmt.executeUpdate();
+            if (rows > 0) {
+                ok = true;
+            }
+        } catch (SQLException e) {
+            System.err.println("Error inserting user: " + e.getMessage());
+        }
+        return ok;
+    }
+
+    @Override
+    public boolean deleteUser(Long id) {
+        String sql = "DELETE FROM users WHERE id=?";
+        boolean ok = false;
+        try (Connection conn = dbConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setLong(1, id);
+            int rows = pstmt.executeUpdate();
+            if (rows > 0) {
+                ok = true;
+            }
+        } catch (SQLException e) {
+            System.err.println("Error deleting user: " + e.getMessage());
+        }
+        return ok;
+    }
+
+    @Override
+    public User findUserById(Long id) {
+        // Use columns that should exist after table extension
+        String sql = "SELECT id, username, password_hash, " +
+                "COALESCE(email, '') as email, " +
+                "COALESCE(full_name, '') as full_name, " +
+                "COALESCE(is_blocked, FALSE) as is_blocked, " +
+                "COALESCE(is_admin, FALSE) as is_admin " +
+                "FROM users WHERE username = ?";
+
+        try (Connection conn = dbConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setLong(1, id);
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    User user = new User();
+                    user.setId(rs.getLong("id"));
+                    user.setUsername(rs.getString("username"));
+                    user.setPasswordHash(rs.getString("password_hash"));
+                    user.setEmail(rs.getString("email"));
+                    user.setFullName(rs.getString("full_name"));
+                    user.setBlocked(rs.getBoolean("is_blocked"));
+                    user.setAdmin(rs.getBoolean("is_admin"));
+                    return user;
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("Error finding user: " + e.getMessage());
+            // Fallback: try with basic columns only
+            return findUserByIdBasic(id);
+        }
+
+        return null;
+    }
+
+    /**
+     * Fallback method using only basic columns
+     */
+    private User findUserByIdBasic(Long id) {
+        String sql = "SELECT id, username, password_hash FROM users WHERE id = ?";
+
+        try (Connection conn = dbConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setLong(1, id);
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    User user = new User();
+                    user.setId(rs.getLong("id"));
+                    user.setUsername(rs.getString("username"));
+                    user.setPasswordHash(rs.getString("password_hash"));
+                    return user;
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("Error finding user (basic): " + e.getMessage());
+        }
+
+        return null;
+    }
 }

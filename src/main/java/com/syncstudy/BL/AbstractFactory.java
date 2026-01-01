@@ -1,5 +1,6 @@
 package com.syncstudy.BL;
 
+import com.syncstudy.BL.ProfileManager.ProfileDAO;
 import com.syncstudy.BL.SessionManager.UserDAO;
 import com.syncstudy.BL.AdminManager.AdminDAO;
 
@@ -20,4 +21,10 @@ public abstract class AbstractFactory {
      * @return AdminDAO implementation
      */
     public abstract AdminDAO createAdminDAO();
+
+    /**
+     * Creates a ProfileDAO instance
+     * @return ProfileDA implementation
+     */
+    public abstract ProfileDAO createProfileDAO();
 }
