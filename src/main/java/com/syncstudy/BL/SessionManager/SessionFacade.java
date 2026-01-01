@@ -10,6 +10,7 @@ public class SessionFacade {
     private static SessionFacade instance;
     private UserManager userManager;
     private ProfileManager profileManager;
+    private Long loggedUserId;
 
     private SessionFacade() {
         this.userManager = UserManager.getInstance();
@@ -50,6 +51,7 @@ public class SessionFacade {
      * @return true if logout went well, false otherwise
      */
     public boolean logout() {
+
         //remove any current user thing
         // => find current user
         // => see how current logout is done
@@ -61,7 +63,6 @@ public class SessionFacade {
      * @return current User if found, null otherwise
      */
     public User getCurrentUser() {
-        //use usermanager to get user using a stored id
-        // => find current user storage or create one
+        return userManager.findUserById(this.loggedUserId);
     }
 }

@@ -1,7 +1,7 @@
 package com.syncstudy.PL.ProfileManager;
 
+import com.syncstudy.BL.ProfileManager.ProfileDAO;
 import com.syncstudy.BL.ProfileManager.UserProfile;
-import com.syncstudy.BL.SessionManager.User;
 import com.syncstudy.PL.DatabaseConnection;
 
 import java.sql.*;
@@ -10,7 +10,7 @@ import java.util.List;
 /**
  * PostgreSQL implementation of ProfileDAO
  */
-public class ProfileDAOPostgres {
+public class ProfileDAOPostgres extends ProfileDAO {
     private DatabaseConnection dbConnection;
 
     public ProfileDAOPostgres() {
@@ -58,11 +58,12 @@ public class ProfileDAOPostgres {
      * @param lastname  the lastname to update
      * @return true if update went well, false otherwise
      */
-    public boolean updateProfile(Connection conn, Long profileId, Long userId, String firstname, String lastname) {
+    public boolean updateProfile(Long profileId, Long userId, String firstname, String lastname) {
         String sql = "UPDATE profiles SET (firstname, lastname) VALUES (?, ?) WHERE id=? AND user_id=?" +
                 "ON CONFLICT (user_id) DO NOTHING";
         boolean ok = false;
-        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+        try (Connection conn = this.dbConnection.getConnection();
+                PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setString(1, firstname);
             pstmt.setString(2, lastname);
             pstmt.setLong(3, profileId);
@@ -95,7 +96,7 @@ public class ProfileDAOPostgres {
                 if (rs.next()) {
                     UserProfile profile = new UserProfile();
                     profile.setId(rs.getLong("id"));
-                    profile.setUserId(rs.getString("user_id"));
+                    profile.setUserId(rs.getLong("user_id"));
                     profile.setFirstname(rs.getString("firstname"));
                     profile.setLastname(rs.getString("lastname"));
                     return profile;
