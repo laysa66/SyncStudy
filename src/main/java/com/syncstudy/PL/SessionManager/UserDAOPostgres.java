@@ -131,10 +131,13 @@ public class UserDAOPostgres extends UserDAO {
                     System.out.println("Default admin user created.");
                 }
             } else {
-                // Make sure existing admin has is_admin = TRUE
-                String updateSql = "UPDATE users SET is_admin = TRUE WHERE username = 'admin'";
-                try (Statement stmt = conn.createStatement()) {
-                    stmt.executeUpdate(updateSql);
+                // Reset admin password and ensure is_admin = TRUE
+                String hashedPassword = BCrypt.hashpw("admin123", BCrypt.gensalt());
+                String updateSql = "UPDATE users SET password_hash = ?, is_admin = TRUE WHERE username = 'admin'";
+                try (PreparedStatement pstmt = conn.prepareStatement(updateSql)) {
+                    pstmt.setString(1, hashedPassword);
+                    pstmt.executeUpdate();
+                    System.out.println("Admin password reset to 'admin123'.");
                 }
             }
 
@@ -143,6 +146,7 @@ public class UserDAOPostgres extends UserDAO {
             createTestUserIfNotExists(conn, "laysa.matmar", "password123", "Laysa Matmar", "lm@university.edu", "polytech montpellier", "Computer Science");
             createTestUserIfNotExists(conn, "omar.hussein", "password123", "omar hussein Smith", "omar.smith@university.edu", "Stanford", "logics");
             createTestUserIfNotExists(conn, "bob.recardo", "password123", "Bob Recardo Tokyo", "tokyo@university.edu", "Harvard", "Physics");
+            createTestUserIfNotExists(conn, "alice.wonder", "password123", "Alice Wonder", "alice@university.com", "MIT", "Mathematics");
 
         } catch (Exception e) {
             System.err.println("Error creating default user: " + e.getMessage());
