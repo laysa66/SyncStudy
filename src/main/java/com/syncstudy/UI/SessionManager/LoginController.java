@@ -4,6 +4,7 @@ package com.syncstudy.UI.SessionManager;
 import com.syncstudy.BL.AdminManager.AdminFacade;
 import com.syncstudy.BL.SessionManager.SessionFacade;
 import com.syncstudy.BL.SessionManager.User;
+import com.syncstudy.BL.SessionManager.User;
 import com.syncstudy.BL.SessionManager.UserManager;
 import com.syncstudy.UI.AdminManager.AdminDashboardController;
 import javafx.fxml.FXML;
@@ -28,14 +29,18 @@ public class LoginController {
     @FXML
     private Label messageLabel;
 
+    @FXML
+    private Label errorLabel;
+
     private SessionFacade userManager;
+    private Runnable onLoginSuccess;
 
 
     // injected by AppUI after FXMLLoader.load()
     public void setUserManager(SessionFacade userManager) {
         this.userManager = userManager;
     }
-
+    public void setOnLoginSuccess(Runnable onLoginSuccess) {this.onLoginSuccess = onLoginSuccess;}
     @FXML
     private void onLogin() {
         if (userManager == null) {
@@ -48,9 +53,14 @@ public class LoginController {
         boolean ok = userManager.login(username, password);
         if (ok) {
             messageLabel.setText("Login successful");
+            User user = userManager.getCurrentUser();
+            // Navigate to chat page
+            if (onLoginSuccess != null) {
+                userManager.setCurrentUser(user);
+                onLoginSuccess.run();
+            }
 
             // Get user and check if admin
-            User user = UserManager.getInstance().findUserByUsername(username);
             if (user != null && user.isAdmin()) {
                 navigateToAdminDashboard(user);
             } else {
@@ -92,5 +102,15 @@ public class LoginController {
         if (messageLabel != null) {
             messageLabel.setText(msg);
         }
+    }
+
+    private void showError(String message) {
+        errorLabel.setText(message);
+        errorLabel.setVisible(true);
+    }
+
+    private void showSuccess(String message) {
+        // Show success toast notification
+        System.out.println(message);
     }
 }

@@ -42,4 +42,17 @@ public class SessionFacade {
             return false;
         }
     }
+
+    /**
+     * Get the current logged-in user
+     * @return the current User object
+     * @throws IllegalStateException if no user is logged in
+     */
+    public User getCurrentUser() {
+        return userManager.getCurrentUser();
+    }
+
+    public void setCurrentUser(User user) {
+        userManager.setCurrentUser(user);
+    }
 }
