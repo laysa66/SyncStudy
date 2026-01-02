@@ -4,6 +4,7 @@ import com.syncstudy.BL.ProfileManager.ProfileDAO;
 import com.syncstudy.BL.ProfileManager.UserProfile;
 import com.syncstudy.BL.SessionManager.User;
 import com.syncstudy.PL.DatabaseConnection;
+import org.mindrot.jbcrypt.BCrypt;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -26,6 +27,7 @@ public class ProfileDAOPostgres extends ProfileDAO {
     private void initializeDatabase() {
         try (Connection conn = dbConnection.getConnection()) {
             createTableProfiles(conn);
+            //bind test profiles to the test users ?
         } catch (SQLException e) {
             System.err.println("Error initializing database: " + e.getMessage());
         }
@@ -217,6 +219,25 @@ public class ProfileDAOPostgres extends ProfileDAO {
         profile.setFirstname(rs.getString("firstname"));
         profile.setLastname(rs.getString("lastname"));
         return profile;
+    }
+
+    private void createTestProfile(Long userId, String firstname, String lastname) {
+        try {
+            String checkSql = "SELECT id FROM profile WHERE user_id = ?";
+            try (Connection conn = this.dbConnection.getConnection();
+                    PreparedStatement pstmt = conn.prepareStatement(checkSql)) {
+                pstmt.setLong(1, userId);
+                try (ResultSet rs = pstmt.executeQuery()) {
+                    if (rs.next()) {
+                        return; // Profile already exists
+                    }
+                }
+            }
+
+            Long id = createProfile(userId,firstname,lastname);
+        } catch (SQLException e) {
+            System.err.println("Error creating test profile for user " + userId + ": " + e.getMessage());
+        }
     }
 
 }

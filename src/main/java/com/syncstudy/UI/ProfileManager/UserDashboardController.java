@@ -4,11 +4,19 @@ import com.syncstudy.BL.AdminManager.AdminFacade;
 import com.syncstudy.BL.ProfileManager.UserProfile;
 import com.syncstudy.BL.SessionManager.SessionFacade;
 import com.syncstudy.BL.SessionManager.User;
+import com.syncstudy.UI.SessionManager.LoginController;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -21,7 +29,10 @@ public class UserDashboardController {
     @FXML private Button deleteAccountButton;
     //change buttons
     @FXML private Label welcomeLabel;
+    @FXML private Label messageLabel;
     @FXML private VBox userInfo;
+    @FXML private BorderPane mainPane;
+    @FXML private VBox sidebar;
 
     private SessionFacade session;
 
@@ -34,7 +45,8 @@ public class UserDashboardController {
 
         // Set welcome message
         if (welcomeLabel != null) {
-            welcomeLabel.setText("Welcome, "+this.session.getCurrentUser().getFullName());
+            welcomeLabel.setText("Welcome, User");
+            //+this.session.getCurrentUser().getFullName()
         }
 
         // Load something by default, but what ??
@@ -44,16 +56,38 @@ public class UserDashboardController {
 
     }
 
+    /**
+     * Loads
+     * @param profile
+     */
     public void showProfile(UserProfile profile) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/syncstudy/UI/ProfileManager/OwnProfile.fxml"));
+            Parent profileView = loader.load();
+            mainPane.setCenter(profileView);
 
+            // Update button states
+            updateButtonStyles(profileButton);
+        } catch (IOException e) {
+            showErrorMessage("Failed to load profile: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
 
     public void showOtherProfiles(List<UserProfile> profiles) {
 
     }
 
+    /**
+     * Show error message as an alert
+     * @param msg the error message to show
+     */
     public void showErrorMessage(String msg) {
-
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Error");
+        alert.setHeaderText(null);
+        alert.setContentText(msg);
+        alert.showAndWait();
     }
 
     public void handleCreateAccount() {
@@ -74,12 +108,15 @@ public class UserDashboardController {
         }
     }
 
+    /**
+     * Handles a click on the logout button
+     */
     public void handleLogout() {
         if(this.session.logout()) {
-            //navigate to next screen when logout
+            navigateToLogin();
         }
         else {
-            //show error
+            showErrorMessage("Logout failed");
         }
     }
 
@@ -88,16 +125,25 @@ public class UserDashboardController {
         String firstname = "";
         String lastname = "";
         if (this.session.updateProfile(firstname, lastname)) {
-            //print on UI profile updated
+            messageLabel.setText("Profile updated");
         }
         else {
-            //show error
+            showErrorMessage("Update failed");
         }
     }
 
+    /**
+     * Handles a click on ViewProfile button
+     * Loads and shows the logged user's own profile
+     */
     public void handleViewOwnProfile() {
         UserProfile profile = this.session.findProfile();
-        //show profile
+        if (profile != null) {
+            showProfile(profile);
+        }
+        else {
+            showErrorMessage("Profile not found");
+        }
     }
 
     public void handleViewOtherProfiles() {
@@ -124,5 +170,49 @@ public class UserDashboardController {
 
     public void setCurrentUserId(Long userId) {
         this.session.setLoggedUserId(userId);
+    }
+
+    /**
+     * Navigate to login page
+     */
+    private void navigateToLogin() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/syncstudy/UI/login.fxml"));
+            Parent dashboard = loader.load();
+
+            //setup new controller to handle login page
+            LoginController controller = loader.getController();
+            controller.setUserManager(session);
+
+            // Switch scene
+            Stage stage = (Stage) welcomeLabel.getScene().getWindow();
+            stage.setScene(new Scene(dashboard));
+            stage.setTitle("SyncStudy - User Dashboard");
+            stage.setWidth(1100);
+            stage.setHeight(700);
+            stage.centerOnScreen();
+
+        } catch (IOException e) {
+            messageLabel.setText("Error loading dashboard: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Update sidebar button styles
+     */
+    private void updateButtonStyles(Button activeButton) {
+        String defaultStyle = "-fx-background-color: transparent; -fx-text-fill: white; -fx-alignment: CENTER_LEFT; -fx-padding: 10 20;";
+        String activeStyle = "-fx-background-color: #495057; -fx-text-fill: white; -fx-alignment: CENTER_LEFT; -fx-padding: 10 20;";
+
+        // Reset all buttons
+        if (profileButton != null) {
+            profileButton.setStyle(defaultStyle);
+        }
+
+        // Set active button
+        if (activeButton != null) {
+            activeButton.setStyle(activeStyle);
+        }
     }
 }
