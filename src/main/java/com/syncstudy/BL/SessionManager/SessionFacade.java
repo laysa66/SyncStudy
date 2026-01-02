@@ -55,4 +55,12 @@ public class SessionFacade {
     public void setCurrentUser(User user) {
         userManager.setCurrentUser(user);
     }
+
+    public void logout() {
+        userManager.setCurrentUser(null);
+    }
+
+    public boolean isLoggedIn() {
+        return userManager.getCurrentUser() != null;
+    }
 }

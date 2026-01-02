@@ -1,6 +1,8 @@
 package com.syncstudy.UI.ChatManager;
+import com.google.gson.Gson;
 import com.syncstudy.BL.ChatManager.ChatFacade;
 import com.syncstudy.BL.ChatManager.Message;
+import javafx.animation.PauseTransition;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
@@ -10,6 +12,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
+ import javafx.util.Duration;
 
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -35,6 +38,9 @@ public class ChatController {
     private Long currentUserId;
     private Long currentGroupId;
     private boolean isAdmin;
+    private TcpChatClient tcpClient;
+
+
 
     public void initialize() {
         messageService = ChatFacade.getInstance();
@@ -64,16 +70,18 @@ public class ChatController {
     }
 
     private void loadMessages() {
-        messageContainer.getChildren().clear();
-        List<Message> messages = messageService.getMessages(currentGroupId);
+        Platform.runLater(() -> {
+            messageContainer.getChildren().clear();
+            List<Message> messages = messageService.getMessages(currentGroupId);
 
-        if (messages.isEmpty()) {
-            showEmptyState();
-        } else {
-            for (Message message : messages) {
-                displayMessage(message);
+            if (messages.isEmpty()) {
+                showEmptyState();
+            } else {
+                for (Message message : messages) {
+                    displayMessage(message);
+                }
             }
-        }
+        });
     }
 
     private void loadOlderMessages() {
@@ -107,7 +115,12 @@ public class ChatController {
 
                 }
 
-                displayMessage(message);
+//                displayMessage(message);
+                // send an envelope so server will broadcast to other clients:
+                if (tcpClient != null) {
+                    TcpChatClient.EventEnvelope envelope = new TcpChatClient.EventEnvelope("new", message, null);
+                    tcpClient.sendEvent(envelope);
+                }
                 messageInput.clear();
                 errorLabel.setVisible(false);
             } else {
@@ -148,12 +161,18 @@ public class ChatController {
 
         VBox bubbleContainer = new VBox(3);
 
-        if (!isOwnMessage) {
-            String fullName = message.getSenderFullName();
-            Label senderName = new Label(fullName != null ? fullName : message.getSenderUsername());
-            senderName.setStyle("-fx-font-weight: bold;");
-            bubbleContainer.getChildren().add(senderName);
-        }
+//        if (!isOwnMessage) {
+        String senderFullName = message.getSenderFullName();
+        String senderUsername = message.getSenderUsername();
+        String senderDisplay = (senderFullName != null && !senderFullName.isEmpty()) ? senderFullName : senderUsername;
+
+        Label senderName = new Label(senderDisplay != null ? senderDisplay : "");
+        senderName.setStyle("-fx-font-weight: bold; -fx-font-size: 11;");
+        // Align sender name according to message side
+        senderName.setAlignment(isOwnMessage ? Pos.CENTER_RIGHT : Pos.CENTER_LEFT);
+
+        bubbleContainer.getChildren().add(senderName);
+        //}
 
         HBox bubble = new HBox();
         bubble.setStyle(isOwnMessage ?
@@ -223,6 +242,10 @@ public class ChatController {
             try {
                 messageService.editMessage(message.getId(), currentUserId, newContent);
                 loadMessages();
+                if (tcpClient != null) {
+                    TcpChatClient.EventEnvelope envelope = new TcpChatClient.EventEnvelope("edit", null, message.getId());
+                    tcpClient.sendEvent(envelope);
+                }
                 showSuccess("Message updated.");
             } catch (Exception e) {
                 showError(e.getMessage());
@@ -241,6 +264,10 @@ public class ChatController {
                 try {
                     messageService.deleteMessage(message.getId(), currentUserId, isAdmin);
                     loadMessages();
+                    if (tcpClient != null) {
+                        TcpChatClient.EventEnvelope envelope = new TcpChatClient.EventEnvelope("delete", null, message.getId());
+                        tcpClient.sendEvent(envelope);
+                    }
                     showSuccess("Message deleted.");
                 } catch (Exception e) {
                     showError(e.getMessage());
@@ -268,5 +295,44 @@ public class ChatController {
     private void showSuccess(String message) {
         // Show success toast notification
         System.out.println(message);
+    }
+
+    public void startRealtime(String host, int port) {
+        if (tcpClient != null) return;
+        tcpClient = new TcpChatClient(host, port);
+        try {
+            tcpClient.connect(this);
+        } catch (Exception e) {
+            showError("Realtime connect failed: " + e.getMessage());
+        }
+    }
+
+    // Add method to stop realtime (call on app shutdown)
+    public void stopRealtime() {
+        if (tcpClient != null) {
+            tcpClient.disconnect();
+            tcpClient = null;
+        }
+    }
+    // This method is called by TcpChatClient on the JavaFX thread
+    public void handleRemoteEnvelope(TcpChatClient.EventEnvelope env) {
+        if (env == null) return;
+        switch (env.type) {
+            case "new":
+                if (env.message != null) {
+                    // avoid duplicates depending on your UI logic; simple append:
+                    displayMessage(env.message);
+                    loadMessages();
+                }
+                break;
+            case "edit":
+                // simplest: reload messages to reflect edits
+                loadMessages();
+                break;
+            case "delete":
+                // simplest: reload messages to reflect deletion
+                loadMessages();
+                break;
+        }
     }
 }

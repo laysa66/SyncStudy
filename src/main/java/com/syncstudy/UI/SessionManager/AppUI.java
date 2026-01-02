@@ -40,35 +40,6 @@ public class AppUI extends Application {
         stage.show();
     }
 
-    private void showChatPage() {
-        try {
-            URL fxml = AppUI.class.getResource("/com/syncstudy/UI/chat.fxml");
-            if (fxml == null) {
-                throw new IllegalStateException("FXML resource not found: /com/syncstudy/UI/chat.fxml");
-            }
-
-            FXMLLoader loader = new FXMLLoader(fxml);
-            Parent root = loader.load();
-
-            ChatController chatController = loader.getController();
-
-            // Get logged-in user from SessionFacade
-            SessionFacade sessionFacade = SessionFacade.getInstance();
-            User currentUser = sessionFacade.getCurrentUser();
-
-            chatController.setCurrentUser(currentUser.getId(), currentUser.isAdmin());
-
-            // Set a default group (you'll need to modify this based on your requirements)
-            // For now, using group ID 1 as an example
-            chatController.setCurrentGroup(1L);
-
-            primaryStage.setTitle("SyncStudy - Chat");
-            primaryStage.setScene(new Scene(root, 800, 600));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
     public static void main(String[] args) {
         launch(args);
     }

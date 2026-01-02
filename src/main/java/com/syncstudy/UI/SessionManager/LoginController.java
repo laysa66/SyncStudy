@@ -7,6 +7,7 @@ import com.syncstudy.BL.SessionManager.User;
 import com.syncstudy.BL.SessionManager.User;
 import com.syncstudy.BL.SessionManager.UserManager;
 import com.syncstudy.UI.AdminManager.AdminDashboardController;
+import com.syncstudy.UI.ChatManager.ChatController;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -17,6 +18,7 @@ import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.net.URL;
 
 public class LoginController {
 
@@ -65,6 +67,7 @@ public class LoginController {
                 navigateToAdminDashboard(user);
             } else {
                 messageLabel.setText("Login successful! (Non-admin user)");
+                showChatPage();
                 // TODO: Navigate to regular user dashboard
             }
         } else {
@@ -94,6 +97,37 @@ public class LoginController {
 
         } catch (IOException e) {
             messageLabel.setText("Error loading dashboard: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    private void showChatPage() {
+        try {
+            URL fxml = AppUI.class.getResource("/com/syncstudy/UI/chat.fxml");
+            if (fxml == null) {
+                throw new IllegalStateException("FXML resource not found: /com/syncstudy/UI/chat.fxml");
+            }
+
+            FXMLLoader loader = new FXMLLoader(fxml);
+            Parent root = loader.load();
+
+            ChatController chatController = loader.getController();
+
+            // Get logged-in user from SessionFacade
+            SessionFacade sessionFacade = SessionFacade.getInstance();
+            User currentUser = sessionFacade.getCurrentUser();
+
+            chatController.setCurrentUser(currentUser.getId(), currentUser.isAdmin());
+            chatController.startRealtime("localhost", 9000);
+
+            // Set a default group (you'll need to modify this based on your requirements)
+            // For now, using group ID 1 as an example
+            chatController.setCurrentGroup(1L);
+
+            Stage stage = (Stage) usernameField.getScene().getWindow();
+            stage.setTitle("SyncStudy - Chat");
+            stage.setScene(new Scene(root, 800, 600));
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
