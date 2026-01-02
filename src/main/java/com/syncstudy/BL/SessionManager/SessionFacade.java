@@ -21,6 +21,12 @@ public class SessionFacade {
         this.profileManager = ProfileManager.getInstance();
     }
 
+    //todo: remove this
+    public Long dummy(String username) {
+        Long userid = userManager.findUserByUsername(username).getId();
+        return userid;
+    }
+
     /**
      * Get the singleton instance of SessionFacade
      * @return SessionFacade instance

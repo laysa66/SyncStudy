@@ -28,6 +28,11 @@ public class ProfileDAOPostgres extends ProfileDAO {
         try (Connection conn = dbConnection.getConnection()) {
             createTableProfiles(conn);
             //bind test profiles to the test users ?
+            createProfile(1L,"Admin","Admin");
+            createProfile(8L,"Alice","Wonder");
+            createProfile(5L,"Laysa","Matmar");
+            createProfile(6L,"Omar hussein","Smith");
+            createProfile(7L,"Bob recardo","Tokyo");
         } catch (SQLException e) {
             System.err.println("Error initializing database: " + e.getMessage());
         }
