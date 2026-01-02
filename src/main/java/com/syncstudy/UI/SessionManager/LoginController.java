@@ -99,7 +99,7 @@ public class LoginController {
      */
     private void navigateToUserDashboard(User user) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/syncstudy/UI/AdminManager/UserDashboardView.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/syncstudy/UI/ProfileManager/UserDashboardView.fxml"));
             Parent dashboard = loader.load();
 
             // Set user ID in facade
