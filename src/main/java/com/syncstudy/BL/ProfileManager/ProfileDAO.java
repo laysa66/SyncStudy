@@ -8,6 +8,7 @@ import java.util.List;
  */
 public abstract class ProfileDAO {
 
+    public abstract Long createProfile(Long userId, String firstname, String lastname);
     public abstract boolean updateProfile(Long profileId, Long userId, String firstname, String lastname);
     public abstract UserProfile findProfileByUserId(Long userId);
     public abstract List<UserProfile> findAllProfiles(String searchQuery, String sortBy, int page, int pageSize);

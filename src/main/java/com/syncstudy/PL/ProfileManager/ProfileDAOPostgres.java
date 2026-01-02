@@ -50,10 +50,51 @@ public class ProfileDAOPostgres extends ProfileDAO {
             System.err.println("Error creating table: " + e.getMessage());
         }
     }
+
+    /**
+     * Inserts a new profile in the database with given credentials and ensures it has been inserted
+     * @param userId provided user id
+     * @param firstname provided firstname
+     * @param lastname provided lastname
+     * @return profile id
+     */
+    public Long createProfile(Long userId, String firstname, String lastname) {
+        String sql = "INSERT INTO profiles (user_id, firstname, lastname) VALUES (?, ?, ?) " +
+                "ON CONFLICT (user_id) DO NOTHING";
+
+        try (Connection conn = this.dbConnection.getConnection();
+                PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setLong(1, userId);
+            pstmt.setString(2, firstname);
+            pstmt.setString(3, lastname);
+            int rows = pstmt.executeUpdate();
+            if (rows > 0) {
+                System.out.println("Profile for user '" + userId + "' inserted successfully.");
+            }
+        } catch (SQLException e) {
+            System.err.println("Error inserting profile: " + e.getMessage());
+        }
+
+        String sql2 = "SELECT id FROM profiles WHERE user_id=?";
+        try (Connection conn = this.dbConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setLong(1, userId);
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getLong("id");
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("Error verifying profile registration: " + e.getMessage());
+        }
+
+        return null;
+
+    }
+
     /**
      * Updates a profile with the given credentials
-     *
-     * @param conn database connection
      * @param profileId the profile id to search for
      * @param userId    the user id to search for
      * @param firstname the firstname to update

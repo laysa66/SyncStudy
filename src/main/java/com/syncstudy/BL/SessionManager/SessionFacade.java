@@ -3,6 +3,8 @@ package com.syncstudy.BL.SessionManager;
 
 import com.syncstudy.BL.ProfileManager.ProfileManager;
 
+import java.sql.SQLException;
+
 /**
  * Singleton Facade providing simplified interface for session management
  */
@@ -14,6 +16,7 @@ public class SessionFacade {
 
     private SessionFacade() {
         this.userManager = UserManager.getInstance();
+        this.profileManager = ProfileManager.getInstance();
     }
 
     /**
@@ -65,5 +68,24 @@ public class SessionFacade {
      */
     public User getCurrentUser() {
         return userManager.findUserById(this.loggedUserId);
+    }
+
+    /**
+     * Creates an account with given credentials (aka registers a user and a userprofile)
+     * @param username the provided username
+     * @param passwordhash the provided password hash
+     * @param email the provided email
+     * @param firstname the provided firstname
+     * @param lastname the provided lastname
+     * @param university the provided university
+     * @param department the provided department
+     * @return true if both operations issued correctly, false otherwise
+     * @throws SQLException if an error occurs during the data insertion
+     */
+    public boolean createAccount(String username, String passwordhash, String email, String firstname, String lastname, String university, String department) throws SQLException {
+        String fullname = (firstname + lastname.toUpperCase());
+        Long userId = userManager.createUser(username,passwordhash,email,fullname,university,department);
+        Long profileId = profileManager.createProfile(userId,firstname,lastname);
+        return !(userId == null || profileId == null);
     }
 }

@@ -66,14 +66,14 @@ public class UserManager {
      * @return true if user creation is successful, false otherwise
      * @throws SQLException if an error occurs during the data insertion process
      */
-    public boolean createUser(String username, String passwordHash, String email, String fullName, String university, String department) throws SQLException {
+    public Long createUser(String username, String passwordHash, String email, String fullName, String university, String department) throws SQLException {
         if (username == null || username.trim().isEmpty() ||
                 passwordHash == null || passwordHash.trim().isEmpty() ||
                 email == null || email.trim().isEmpty() ||
                 fullName == null || fullName.trim().isEmpty() ||
                 university == null || university.trim().isEmpty() ||
                 department == null || department.trim().isEmpty()) {
-            return false;
+            return null;
         }
         return userDAO.createUser(username,passwordHash,email,fullName,university,department);
     }

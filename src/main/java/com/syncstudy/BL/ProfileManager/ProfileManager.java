@@ -34,6 +34,15 @@ public class ProfileManager {
         return instance;
     }
 
+    public Long createProfile(Long userId, String firstname, String lastname) {
+        if (userId == null ||
+                firstname == null || firstname.trim().isEmpty() ||
+                lastname == null || lastname.trim().isEmpty()) {
+            return null;
+        }
+        return profileDAO.createProfile(userId,firstname,lastname);
+    }
+
     public boolean updateProfile(Long profileId, Long userId, String firstname, String lastname) {
         if (profileId == null ||
                 userId == null ||

@@ -268,7 +268,7 @@ public class UserDAOPostgres extends UserDAO {
     }
 
     @Override
-    public boolean createUser(String username, String passwordHash, String email, String fullName, String university, String department) {
+    public Long createUser(String username, String passwordHash, String email, String fullName, String university, String department) {
         String sql = "INSERT INTO users (username, password_hash, email, full_name, university, department, profile_photo, last_login) VALUES (?, ?, ?, ?, ?, ?, NULL, NOW()) " +
                 "ON CONFLICT (username) DO NOTHING";
         boolean ok = false;
@@ -282,12 +282,27 @@ public class UserDAOPostgres extends UserDAO {
             pstmt.setString(6, department);
             int rows = pstmt.executeUpdate();
             if (rows > 0) {
-                ok = true;
+                System.out.println("User '" + username + "' created successfully.");
             }
         } catch (SQLException e) {
-            System.err.println("Error inserting user: " + e.getMessage());
+            System.err.println("Error creating user: " + e.getMessage());
         }
-        return ok;
+
+        String sql2 = "SELECT id FROM users WHERE username=?";
+        try (Connection conn = this.dbConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, username);
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getLong("id");
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("Error verifying user registration: " + e.getMessage());
+        }
+
+        return null;
     }
 
     @Override
