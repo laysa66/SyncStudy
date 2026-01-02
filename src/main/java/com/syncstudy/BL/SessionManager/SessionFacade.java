@@ -2,8 +2,10 @@ package com.syncstudy.BL.SessionManager;
 
 
 import com.syncstudy.BL.ProfileManager.ProfileManager;
+import com.syncstudy.BL.ProfileManager.UserProfile;
 
 import java.sql.SQLException;
+import java.util.List;
 
 /**
  * Singleton Facade providing simplified interface for session management
@@ -80,12 +82,51 @@ public class SessionFacade {
      * @param university the provided university
      * @param department the provided department
      * @return true if both operations issued correctly, false otherwise
-     * @throws SQLException if an error occurs during the data insertion
      */
-    public boolean createAccount(String username, String passwordhash, String email, String firstname, String lastname, String university, String department) throws SQLException {
+    public boolean createAccount(String username, String passwordhash, String email, String firstname, String lastname, String university, String department) {
         String fullname = (firstname + lastname.toUpperCase());
         Long userId = userManager.createUser(username,passwordhash,email,fullname,university,department);
         Long profileId = profileManager.createProfile(userId,firstname,lastname);
         return !(userId == null || profileId == null);
+    }
+
+    /**
+     * Updates a profile with given credentials
+     * @param firstname provided firstname
+     * @param lastname provided lastname
+     * @return true if operation issued correctly, false otherwise
+     */
+    public boolean updateProfile(String firstname, String lastname) {
+        Long userId = this.loggedUserId;
+        Long profileId = this.profileManager.findProfileByUserId(userId).getId();
+        return profileManager.updateProfile(profileId,userId,firstname,lastname);
+    }
+
+    /**
+     * Finds the currently logged user's profile
+     * @return UserProfile object if found, null otherwise
+     */
+    public UserProfile findProfile() {
+        return this.profileManager.findProfileByUserId(this.loggedUserId);
+    }
+
+    /**
+     * Finds all profiles corresponding to the parameters
+     * @param searchQuery a research term
+     * @param sortBy filter
+     * @param page page number
+     * @param pageSize size of pagination
+     * @return a list of UserProfile objects
+     */
+    public List<UserProfile> findAllProfiles(String searchQuery, String sortBy, int page, int pageSize) {
+        return this.profileManager.findAllProfiles(searchQuery,sortBy,page,pageSize);
+    }
+
+    /**
+     * Deletes the currently logged user's account
+     * @return true if deletion issued correctly, false otherwise
+     */
+    public boolean deleteAccount() {
+        return this.userManager.deleteUser(this.loggedUserId);
     }
 }

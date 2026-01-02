@@ -9,6 +9,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 
+import java.sql.SQLException;
 import java.util.List;
 
 public class UserDashboardController {
@@ -55,27 +56,68 @@ public class UserDashboardController {
     }
 
     public void handleCreateAccount() {
-        this.session.createAccount();
         //go find the credentials inside the window with javafx stuff
+        String username = "";
+        String passwordhash = "";
+        String email = "";
+        String firstname = "";
+        String lastname = "";
+        String university = "";
+        String department = "";
+
+        if(this.session.createAccount(username, passwordhash, email, firstname, lastname, university, department)) {
+            //print on UI account created
+        }
+        else {
+            //show error
+        }
     }
 
     public void handleLogout() {
-        this.session.logout();
+        if(this.session.logout()) {
+            //navigate to next screen when logout
+        }
+        else {
+            //show error
+        }
     }
 
     public void handleUpdateProfile() {
-
+        //go find the credentials inside the window with javafx stuff
+        String firstname = "";
+        String lastname = "";
+        if (this.session.updateProfile(firstname, lastname)) {
+            //print on UI profile updated
+        }
+        else {
+            //show error
+        }
     }
 
     public void handleViewOwnProfile() {
-
+        UserProfile profile = this.session.findProfile();
+        //show profile
     }
 
     public void handleViewOtherProfiles() {
-
+        //go find the search queries inside the window with javafx stuff
+        String searchQuery = "";
+        String sortBy = "";
+        int page = 0;
+        int pageSize = 0;
+        List<UserProfile> profiles = this.session.findAllProfiles(searchQuery, sortBy, page, pageSize);
+        //show list
     }
 
     public void handleDeleteAccount() {
+        //go find the credentials inside the window with javafx stuff
+        if (this.session.deleteAccount()) {
+            //print on UI account deleted
+            //navigate accordingly
+        }
+        else {
+            //show error
+        }
 
     }
 }

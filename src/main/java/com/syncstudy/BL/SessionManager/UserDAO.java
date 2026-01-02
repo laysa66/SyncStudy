@@ -34,9 +34,8 @@ public abstract class UserDAO {
      * @param university the new user's university
      * @param department the new user's department
      * @return true if user creation is successful, false otherwise
-     * @throws SQLException if an error occurs during the data insertion process
      */
-    public abstract Long createUser(String username, String passwordHash, String email, String fullName, String university, String department) throws SQLException;
+    public abstract Long createUser(String username, String passwordHash, String email, String fullName, String university, String department);
 
     /**
      * Delete a user by id
