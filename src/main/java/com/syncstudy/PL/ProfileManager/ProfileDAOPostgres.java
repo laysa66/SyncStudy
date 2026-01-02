@@ -175,6 +175,7 @@ public class ProfileDAOPostgres extends ProfileDAO {
         profile.setUserId(rs.getLong("user_id"));
         profile.setFirstname(rs.getString("firstname"));
         profile.setLastname(rs.getString("lastname"));
+        return profile;
     }
 
 }
