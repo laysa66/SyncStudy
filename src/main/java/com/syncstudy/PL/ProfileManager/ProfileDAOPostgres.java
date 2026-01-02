@@ -2,9 +2,11 @@ package com.syncstudy.PL.ProfileManager;
 
 import com.syncstudy.BL.ProfileManager.ProfileDAO;
 import com.syncstudy.BL.ProfileManager.UserProfile;
+import com.syncstudy.BL.SessionManager.User;
 import com.syncstudy.PL.DatabaseConnection;
 
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -109,7 +111,70 @@ public class ProfileDAOPostgres extends ProfileDAO {
         return null;
     }
 
-    public List<UserProfile> findAllProfiles(Long excludeUserId) {
-        //find how they did the search thing because it's exactly what it's supposed to be
+    public List<UserProfile> findAllProfiles(String searchQuery, String sortBy, int page, int pageSize) {
+        List<UserProfile> profiles = new ArrayList<>();
+
+        StringBuilder sql = new StringBuilder(
+                "SELECT id, user_id, firstname, lastname, full_name " +
+                        "FROM profiles WHERE 1=1 "
+        );
+
+        // Add search filter
+        if (searchQuery != null && !searchQuery.isEmpty()) {
+            sql.append("AND (LOWER(firstname) LIKE LOWER(?) OR LOWER(lastname) LIKE LOWER(?)) ");
+        }
+
+        // Add sorting
+        switch (sortBy != null ? sortBy.toLowerCase() : "name") {
+            case "firstname":
+                sql.append("ORDER BY firstname ASC ");
+                break;
+            case "lastname":
+                sql.append("ORDER BY lastname ASC ");
+                break;
+            case "name":
+            default:
+                sql.append("ORDER BY firstname ASC, lastname ASC "); // Sort by both names
+                break;
+        }
+
+        // Add pagination
+        sql.append("LIMIT ? OFFSET ?");
+
+        try (Connection conn = dbConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql.toString())) {
+
+            int paramIndex = 1;
+
+            // Set search parameters
+            if (searchQuery != null && !searchQuery.isEmpty()) {
+                String searchPattern = "%" + searchQuery + "%";
+                pstmt.setString(paramIndex++, searchPattern);
+                pstmt.setString(paramIndex++, searchPattern); // Only 2 parameters now
+            }
+
+            // Set pagination parameters
+            pstmt.setInt(paramIndex++, pageSize);
+            pstmt.setInt(paramIndex, page * pageSize);
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+                while (rs.next()) {
+                    profiles.add(mapResultSetToUserProfile(rs));
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("Error getting all profiles: " + e.getMessage());
+        }
+
+        return profiles;
     }
+
+    private UserProfile mapResultSetToUserProfile(ResultSet rs) throws SQLException {
+        UserProfile profile = new UserProfile();
+        profile.setId(rs.getLong("id"));
+        profile.setUserId(rs.getLong("user_id"));
+        profile.setFirstname(rs.getString("firstname"));
+        profile.setLastname(rs.getString("lastname"));
+    }
+
 }

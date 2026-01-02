@@ -51,11 +51,12 @@ public class SessionFacade {
      * @return true if logout went well, false otherwise
      */
     public boolean logout() {
-
-        //remove any current user thing
-        // => find current user
-        // => see how current logout is done
+        this.loggedUserId = null;
+        if (this.loggedUserId == null) {
+            return true;
+        }
         return false;
+        //harmonize with Lysa's logout ?
     }
 
     /**

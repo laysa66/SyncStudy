@@ -48,9 +48,8 @@ public class ProfileManager {
         return profileDAO.findProfileByUserId(userId);
     }
 
-    public List<UserProfile> findAllProfiles(Long excludeUserId) {
-        return profileDAO.findAllProfiles(excludeUserId);
-        //to change when I figure out the rest
+    public List<UserProfile> findAllProfiles(String searchQuery, String sortBy, int page, int pageSize) {
+        return profileDAO.findAllProfiles(searchQuery, sortBy, page, pageSize);
     }
 
 

@@ -10,6 +10,5 @@ public abstract class ProfileDAO {
 
     public abstract boolean updateProfile(Long profileId, Long userId, String firstname, String lastname);
     public abstract UserProfile findProfileByUserId(Long userId);
-    public abstract List<UserProfile> findAllProfiles(Long excludeUserId);
-    //to change when figured out
+    public abstract List<UserProfile> findAllProfiles(String searchQuery, String sortBy, int page, int pageSize);
 }
