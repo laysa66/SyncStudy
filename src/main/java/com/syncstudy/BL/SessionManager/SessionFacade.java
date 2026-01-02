@@ -72,6 +72,10 @@ public class SessionFacade {
         return userManager.findUserById(this.loggedUserId);
     }
 
+    public void setLoggedUserId(Long loggedUserId) {
+        this.loggedUserId = loggedUserId;
+    }
+
     /**
      * Creates an account with given credentials (aka registers a user and a userprofile)
      * @param username the provided username

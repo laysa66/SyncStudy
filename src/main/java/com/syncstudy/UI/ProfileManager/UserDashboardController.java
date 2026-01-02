@@ -16,6 +16,7 @@ public class UserDashboardController {
     @FXML private Button profileButton;
     @FXML private Button userInfoButton;
     @FXML private Button logoutButton;
+    @FXML private Button createAccountButton;
     @FXML private Button submitUpdateButton;
     @FXML private Button deleteAccountButton;
     //change buttons
@@ -119,5 +120,9 @@ public class UserDashboardController {
             //show error
         }
 
+    }
+
+    public void setCurrentUserId(Long userId) {
+        this.session.setLoggedUserId(userId);
     }
 }

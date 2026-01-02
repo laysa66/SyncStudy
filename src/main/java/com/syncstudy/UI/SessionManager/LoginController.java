@@ -6,6 +6,7 @@ import com.syncstudy.BL.SessionManager.SessionFacade;
 import com.syncstudy.BL.SessionManager.User;
 import com.syncstudy.BL.SessionManager.UserManager;
 import com.syncstudy.UI.AdminManager.AdminDashboardController;
+import com.syncstudy.UI.ProfileManager.UserDashboardController;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -55,7 +56,12 @@ public class LoginController {
                 navigateToAdminDashboard(user);
             } else {
                 messageLabel.setText("Login successful! (Non-admin user)");
-                // TODO: Navigate to regular user dashboard
+                if (user != null) {
+                    navigateToUserDashboard(user);
+                }
+                else {
+                    messageLabel.setText("Invalid username or password");
+                }
             }
         } else {
             messageLabel.setText("Invalid username or password");
@@ -78,6 +84,32 @@ public class LoginController {
             Stage stage = (Stage) usernameField.getScene().getWindow();
             stage.setScene(new Scene(dashboard));
             stage.setTitle("SyncStudy - Admin Dashboard");
+            stage.setWidth(1100);
+            stage.setHeight(700);
+            stage.centerOnScreen();
+
+        } catch (IOException e) {
+            messageLabel.setText("Error loading dashboard: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Navigate to user dashboard
+     */
+    private void navigateToUserDashboard(User user) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/syncstudy/UI/AdminManager/UserDashboardView.fxml"));
+            Parent dashboard = loader.load();
+
+            // Set user ID in facade
+            UserDashboardController controller = loader.getController();
+            controller.setCurrentUserId(user.getId());
+
+            // Switch scene
+            Stage stage = (Stage) usernameField.getScene().getWindow();
+            stage.setScene(new Scene(dashboard));
+            stage.setTitle("SyncStudy - User Dashboard");
             stage.setWidth(1100);
             stage.setHeight(700);
             stage.centerOnScreen();
