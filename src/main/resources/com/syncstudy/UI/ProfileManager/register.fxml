@@ -26,20 +26,20 @@
         <Label text="Password:" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
         <PasswordField fx:id="passwordField" promptText="Password" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
 
-        <Label text="Email:" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
-        <TextField fx:id="emailField" promptText="Email" GridPane.rowIndex="0" GridPane.columnIndex="1" />
+        <Label text="Email:" GridPane.rowIndex="0" GridPane.columnIndex="3"/>
+        <TextField fx:id="emailField" promptText="Email" GridPane.rowIndex="0" GridPane.columnIndex="4" />
 
-        <Label text="Firstname:" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
-        <TextField fx:id="firstnameField" promptText="Firstname" GridPane.rowIndex="0" GridPane.columnIndex="1" />
+        <Label text="Firstname:" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
+        <TextField fx:id="firstnameField" promptText="Firstname" GridPane.rowIndex="3" GridPane.columnIndex="1" />
 
-        <Label text="Lastname:" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
-        <TextField fx:id="lastnameField" promptText="Lastname" GridPane.rowIndex="0" GridPane.columnIndex="1" />
+        <Label text="Lastname:" GridPane.rowIndex="4" GridPane.columnIndex="0"/>
+        <TextField fx:id="lastnameField" promptText="Lastname" GridPane.rowIndex="4" GridPane.columnIndex="1" />
 
-        <Label text="University:" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
-        <TextField fx:id="universityField" promptText="University" GridPane.rowIndex="0" GridPane.columnIndex="1" />
+        <Label text="University:" GridPane.rowIndex="1" GridPane.columnIndex="3"/>
+        <TextField fx:id="universityField" promptText="University" GridPane.rowIndex="1" GridPane.columnIndex="4" />
 
-        <Label text="Department:" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
-        <TextField fx:id="departmentField" promptText="Department" GridPane.rowIndex="0" GridPane.columnIndex="1" />
+        <Label text="Department:" GridPane.rowIndex="2" GridPane.columnIndex="3"/>
+        <TextField fx:id="departmentField" promptText="Department" GridPane.rowIndex="2" GridPane.columnIndex="4" />
     </GridPane>
 
     <HBox spacing="10" alignment="CENTER_RIGHT">
