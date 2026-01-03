@@ -21,12 +21,6 @@ public class SessionFacade {
         this.profileManager = ProfileManager.getInstance();
     }
 
-    //todo: remove this
-    public Long dummy(String username) {
-        Long userid = userManager.findUserByUsername(username).getId();
-        return userid;
-    }
-
     /**
      * Get the singleton instance of SessionFacade
      * @return SessionFacade instance
@@ -94,7 +88,7 @@ public class SessionFacade {
      * @return true if both operations issued correctly, false otherwise
      */
     public boolean createAccount(String username, String passwordhash, String email, String firstname, String lastname, String university, String department) {
-        String fullname = (firstname + lastname.toUpperCase());
+        String fullname = (firstname + " " + lastname.toUpperCase());
         Long userId = userManager.createUser(username,passwordhash,email,fullname,university,department);
         Long profileId = profileManager.createProfile(userId,firstname,lastname);
         return !(userId == null || profileId == null);

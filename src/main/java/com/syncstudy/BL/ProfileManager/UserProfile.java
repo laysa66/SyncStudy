@@ -55,7 +55,7 @@ public class UserProfile {
      * Get the full name from the profile
      */
     public String getFullName() {
-        return this.firstname + this.lastname;
+        return this.firstname + " " + this.lastname;
     }
 
     @Override
