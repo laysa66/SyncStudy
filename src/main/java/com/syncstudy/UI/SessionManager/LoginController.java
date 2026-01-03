@@ -124,6 +124,7 @@ public class LoginController {
     /**
      * Navigate to register page
      */
+    @FXML
     private void navigateToRegister() {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/syncstudy/UI/ProfileManager/register.fxml"));

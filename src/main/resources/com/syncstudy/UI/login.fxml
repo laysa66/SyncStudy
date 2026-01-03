@@ -31,5 +31,10 @@
         <Button text="Login" onAction="#onLogin" defaultButton="true"/>
     </HBox>
 
+    <HBox spacing="10" alignment="CENTER_LEFT">
+        <Label text="No account ? Register here:" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+        <Button text="Sign up" onAction="#navigateToRegister" defaultButton="true"/>
+    </HBox>
+
     <Label fx:id="messageLabel" wrapText="true" style="-fx-text-fill: #b00020;"/>
 </VBox>
