@@ -54,8 +54,7 @@ public class LoginController {
             if (user != null && user.isAdmin()) {
                 navigateToAdminDashboard(user);
             } else {
-                messageLabel.setText("Login successful! (Non-admin user)");
-                // TODO: Navigate to regular user dashboard
+                navigateToUserDashboard(user);
             }
         } else {
             messageLabel.setText("Invalid username or password");
@@ -84,6 +83,28 @@ public class LoginController {
 
         } catch (IOException e) {
             messageLabel.setText("Error loading dashboard: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Navigate to user dashboard (GroupManager)
+     */
+    private void navigateToUserDashboard(User user) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/syncstudy/UI/GroupManager/GroupManager.fxml"));
+            Parent groupDashboard = loader.load();
+
+            // Switch scene
+            Stage stage = (Stage) usernameField.getScene().getWindow();
+            stage.setScene(new Scene(groupDashboard));
+            stage.setTitle("SyncStudy - Groupes d'étude");
+            stage.setWidth(1200);
+            stage.setHeight(800);
+            stage.centerOnScreen();
+
+        } catch (IOException e) {
+            messageLabel.setText("Error loading group dashboard: " + e.getMessage());
             e.printStackTrace();
         }
     }
