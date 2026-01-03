@@ -63,7 +63,7 @@ public class UserDashboardController {
             //+this.session.getCurrentUser().getFullName()
         }
 
-        // Load something by default, but what ??
+        // Load other profiles by default
     }
 
     public void showUserInfo(User user) {

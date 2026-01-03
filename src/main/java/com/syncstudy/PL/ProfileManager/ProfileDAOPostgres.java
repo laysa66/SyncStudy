@@ -111,7 +111,6 @@ public class ProfileDAOPostgres extends ProfileDAO {
     public boolean updateProfile(Long profileId, Long userId, String firstname, String lastname) {
         String sql = "UPDATE profiles SET (firstname, lastname) VALUES (?, ?) WHERE id=? AND user_id=?" +
                 "ON CONFLICT (user_id) DO NOTHING";
-        boolean ok = false;
         try (Connection conn = this.dbConnection.getConnection();
                 PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setString(1, firstname);
@@ -121,12 +120,12 @@ public class ProfileDAOPostgres extends ProfileDAO {
             int rows = pstmt.executeUpdate();
             if (rows > 0) {
                 System.out.println("Profile '" + profileId + "' updated successfully.");
-                ok = true;
             }
+            return rows > 0;
         } catch (SQLException e) {
             System.err.println("Error updating profile: " + e.getMessage());
+            return false;
         }
-        return ok;
     }
 
     /**
@@ -155,7 +154,6 @@ public class ProfileDAOPostgres extends ProfileDAO {
         } catch (SQLException e) {
             System.err.println("Error finding profile: " + e.getMessage());
         }
-
         return null;
     }
 
@@ -163,7 +161,7 @@ public class ProfileDAOPostgres extends ProfileDAO {
         List<UserProfile> profiles = new ArrayList<>();
 
         StringBuilder sql = new StringBuilder(
-                "SELECT id, user_id, firstname, lastname, full_name " +
+                "SELECT id, user_id, firstname, lastname " +
                         "FROM profiles WHERE 1=1 "
         );
 
@@ -220,18 +218,15 @@ public class ProfileDAOPostgres extends ProfileDAO {
     @Override
     public boolean deleteProfile(Long userId) {
         String sql = "DELETE FROM profiles WHERE user_id=?";
-        boolean ok = false;
         try (Connection conn = dbConnection.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setLong(1, userId);
             int rows = pstmt.executeUpdate();
-            if (rows > 0) {
-                ok = true;
-            }
+            return rows > 0;
         } catch (SQLException e) {
             System.err.println("Error deleting profile: " + e.getMessage());
+            return false;
         }
-        return ok;
     }
 
     @Override

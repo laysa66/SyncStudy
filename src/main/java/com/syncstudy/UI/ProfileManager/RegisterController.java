@@ -1,5 +1,6 @@
 package com.syncstudy.UI.ProfileManager;
 
+import com.syncstudy.BL.AdminManager.AdminFacade;
 import com.syncstudy.BL.SessionManager.SessionFacade;
 import com.syncstudy.UI.SessionManager.LoginController;
 import javafx.fxml.FXML;
@@ -30,6 +31,14 @@ public class RegisterController {
     @FXML private Label messageLabel;
     //session handler
     private SessionFacade session;
+
+    /**
+     * Initialize the controller
+     */
+    @FXML
+    public void initialize() {
+        this.session = SessionFacade.getInstance();
+    }
 
     public void setSession(SessionFacade session) {
         this.session = session;
