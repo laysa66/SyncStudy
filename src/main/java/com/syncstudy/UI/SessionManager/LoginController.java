@@ -32,6 +32,10 @@ public class LoginController {
 
     private SessionFacade userManager;
 
+    @FXML
+    public void initialize() {
+        this.userManager = SessionFacade.getInstance(); // Always get the singleton
+    }
 
     // injected by AppUI after FXMLLoader.load()
     public void setUserManager(SessionFacade userManager) {
@@ -42,6 +46,7 @@ public class LoginController {
     private void onLogin() {
         if (userManager == null) {
             messageLabel.setText("Internal error: UserManager not available.");
+            this.userManager = SessionFacade.getInstance();
             return;
         }
         String username = usernameField.getText();
@@ -53,6 +58,7 @@ public class LoginController {
 
             // Get user and check if admin
             User user = UserManager.getInstance().findUserByUsername(username);
+            this.userManager.setLoggedUserId(user.getId());
             if (user != null && user.isAdmin()) {
                 navigateToAdminDashboard(user);
             } else {

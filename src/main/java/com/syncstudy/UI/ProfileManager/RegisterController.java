@@ -37,7 +37,9 @@ public class RegisterController {
      */
     @FXML
     public void initialize() {
-        this.session = SessionFacade.getInstance();
+        if (this.session == null) {
+            this.session = SessionFacade.getInstance();
+        }
     }
 
     public void setSession(SessionFacade session) {
@@ -69,15 +71,11 @@ public class RegisterController {
     private void navigateToLogin() {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/syncstudy/UI/login.fxml"));
-            Parent dashboard = loader.load();
-
-            //setup new controller to handle login page
-            LoginController controller = loader.getController();
-            controller.setUserManager(session);
+            Parent login = loader.load();
 
             // Switch scene
             Stage stage = (Stage) usernameField.getScene().getWindow();
-            stage.setScene(new Scene(dashboard));
+            stage.setScene(new Scene(login));
             stage.setTitle("SyncStudy - Login");
             stage.setWidth(1100);
             stage.setHeight(700);

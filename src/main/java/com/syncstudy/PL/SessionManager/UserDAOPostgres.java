@@ -290,7 +290,7 @@ public class UserDAOPostgres extends UserDAO {
 
         String sql2 = "SELECT id FROM users WHERE username=?";
         try (Connection conn = this.dbConnection.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+             PreparedStatement pstmt = conn.prepareStatement(sql2)) {
             pstmt.setString(1, username);
 
             try (ResultSet rs = pstmt.executeQuery()) {

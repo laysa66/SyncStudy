@@ -84,7 +84,7 @@ public class ProfileDAOPostgres extends ProfileDAO {
 
         String sql2 = "SELECT id FROM profiles WHERE user_id=?";
         try (Connection conn = this.dbConnection.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+             PreparedStatement pstmt = conn.prepareStatement(sql2)) {
             pstmt.setLong(1, userId);
 
             try (ResultSet rs = pstmt.executeQuery()) {
@@ -109,8 +109,7 @@ public class ProfileDAOPostgres extends ProfileDAO {
      * @return true if update went well, false otherwise
      */
     public boolean updateProfile(Long profileId, Long userId, String firstname, String lastname) {
-        String sql = "UPDATE profiles SET (firstname, lastname) VALUES (?, ?) WHERE id=? AND user_id=?" +
-                "ON CONFLICT (user_id) DO NOTHING";
+        String sql = "UPDATE profiles SET firstname=?, lastname=? WHERE id=? AND user_id=?";
         try (Connection conn = this.dbConnection.getConnection();
                 PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setString(1, firstname);
@@ -244,7 +243,6 @@ public class ProfileDAOPostgres extends ProfileDAO {
                 String searchPattern = "%" + searchQuery + "%";
                 pstmt.setString(1, searchPattern);
                 pstmt.setString(2, searchPattern);
-                pstmt.setString(3, searchPattern);
             }
 
             try (ResultSet rs = pstmt.executeQuery()) {
@@ -271,7 +269,7 @@ public class ProfileDAOPostgres extends ProfileDAO {
 
     private void createTestProfile(Long userId, String firstname, String lastname) {
         try {
-            String checkSql = "SELECT id FROM profile WHERE user_id = ?";
+            String checkSql = "SELECT id FROM profiles WHERE user_id = ?";
             try (Connection conn = this.dbConnection.getConnection();
                     PreparedStatement pstmt = conn.prepareStatement(checkSql)) {
                 pstmt.setLong(1, userId);

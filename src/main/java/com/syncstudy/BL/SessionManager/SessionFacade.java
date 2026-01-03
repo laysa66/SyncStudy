@@ -102,6 +102,14 @@ public class SessionFacade {
      */
     public boolean updateProfile(String firstname, String lastname) {
         Long userId = this.loggedUserId;
+
+        UserProfile profile = this.profileManager.findProfileByUserId(userId);
+
+        if (profile == null) {
+            System.err.println("No profile found for user ID: " + userId);
+            return false;
+        }
+
         Long profileId = this.profileManager.findProfileByUserId(userId).getId();
         return profileManager.updateProfile(profileId,userId,firstname,lastname);
     }

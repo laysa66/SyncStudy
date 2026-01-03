@@ -188,10 +188,6 @@ public class UserDashboardController {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/syncstudy/UI/login.fxml"));
             Parent dashboard = loader.load();
 
-            //setup new controller to handle login page
-            LoginController controller = loader.getController();
-            controller.setUserManager(session);
-
             // Switch scene
             Stage stage = (Stage) welcomeLabel.getScene().getWindow();
             stage.setScene(new Scene(dashboard));
