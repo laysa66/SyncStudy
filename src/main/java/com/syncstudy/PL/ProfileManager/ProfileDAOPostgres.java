@@ -28,11 +28,11 @@ public class ProfileDAOPostgres extends ProfileDAO {
         try (Connection conn = dbConnection.getConnection()) {
             createTableProfiles(conn);
             //bind test profiles to the test users ?
-            createProfile(1L,"Admin","Admin");
-            createProfile(8L,"Alice","Wonder");
-            createProfile(5L,"Laysa","Matmar");
-            createProfile(6L,"Omar hussein","Smith");
-            createProfile(7L,"Bob recardo","Tokyo");
+            createTestProfile(1L,"Admin","Admin");
+            createTestProfile(8L,"Alice","Wonder");
+            createTestProfile(5L,"Laysa","Matmar");
+            createTestProfile(6L,"Omar hussein","Smith");
+            createTestProfile(7L,"Bob recardo","Tokyo");
         } catch (SQLException e) {
             System.err.println("Error initializing database: " + e.getMessage());
         }
@@ -216,6 +216,54 @@ public class ProfileDAOPostgres extends ProfileDAO {
 
         return profiles;
     }
+
+    @Override
+    public boolean deleteProfile(Long userId) {
+        String sql = "DELETE FROM profiles WHERE user_id=?";
+        boolean ok = false;
+        try (Connection conn = dbConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setLong(1, userId);
+            int rows = pstmt.executeUpdate();
+            if (rows > 0) {
+                ok = true;
+            }
+        } catch (SQLException e) {
+            System.err.println("Error deleting profile: " + e.getMessage());
+        }
+        return ok;
+    }
+
+    @Override
+    public int getTotalProfilesCount(String searchQuery) {
+        StringBuilder sql = new StringBuilder("SELECT COUNT(*) FROM profiles WHERE 1=1 ");
+
+        if (searchQuery != null && !searchQuery.isEmpty()) {
+            sql.append("AND (LOWER(firstname) LIKE LOWER(?) OR LOWER(lastname) LIKE LOWER(?)");
+        }
+
+        try (Connection conn = dbConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql.toString())) {
+
+            if (searchQuery != null && !searchQuery.isEmpty()) {
+                String searchPattern = "%" + searchQuery + "%";
+                pstmt.setString(1, searchPattern);
+                pstmt.setString(2, searchPattern);
+                pstmt.setString(3, searchPattern);
+            }
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1);
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("Error getting profiles count: " + e.getMessage());
+        }
+
+        return 0;
+    }
+
 
     private UserProfile mapResultSetToUserProfile(ResultSet rs) throws SQLException {
         UserProfile profile = new UserProfile();

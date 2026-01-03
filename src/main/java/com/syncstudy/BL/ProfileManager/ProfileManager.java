@@ -1,7 +1,6 @@
 package com.syncstudy.BL.ProfileManager;
 
 import com.syncstudy.BL.AbstractFactory;
-import com.syncstudy.BL.SessionManager.UserManager;
 import com.syncstudy.PL.PostgresFactory;
 
 import java.util.List;
@@ -61,5 +60,20 @@ public class ProfileManager {
         return profileDAO.findAllProfiles(searchQuery, sortBy, page, pageSize);
     }
 
+    /**
+     * Delete a profile by id
+     * @param userId the id to delete the user from
+     * @return true if deletion successful, false otherwise
+     */
+    public boolean deleteProfile(Long userId) {
+        if (userId == null) {
+            return false;
+        }
+        return profileDAO.deleteProfile(userId);
+    }
 
+
+    public int getTotalProfilesCount(String searchQuery) {
+        return profileDAO.getTotalProfilesCount(searchQuery != null ? searchQuery.trim() : "");
+    }
 }

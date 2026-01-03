@@ -5,13 +5,13 @@ import com.syncstudy.BL.ProfileManager.UserProfile;
 import com.syncstudy.BL.SessionManager.SessionFacade;
 import com.syncstudy.BL.SessionManager.User;
 import com.syncstudy.UI.SessionManager.LoginController;
+import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
+import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -19,8 +19,11 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Properties;
 
 public class UserDashboardController {
+    @FXML public Button allProfilesButton;
+    @FXML public Button updateButton;
     @FXML private Button profileButton;
     @FXML private Button userInfoButton;
     @FXML private Button logoutButton;
@@ -34,6 +37,18 @@ public class UserDashboardController {
     @FXML private VBox sidebar;
 
     private SessionFacade session;
+
+    @FXML private TextField searchField;
+    @FXML private ComboBox<String> statusFilter;
+    @FXML private ComboBox<String> sortByCombo;
+    @FXML private TableView<User> profilesTable;
+    @FXML private TableColumn<User, Boolean> selectColumn;
+    @FXML private TableColumn<User, String> nameColumn;
+    @FXML private Pagination pagination;
+    @FXML private Label totalUsersLabel;
+
+    private ObservableList<UserProfile> profilesList;
+    private static final int PAGE_SIZE = 20;
 
     /**
      * Initialize the controller
@@ -53,6 +68,17 @@ public class UserDashboardController {
 
     public void showUserInfo(User user) {
 
+    }
+
+    /**
+     * Handle clear filters action
+     */
+    @FXML
+    private void handleClearFilters() {
+        searchField.clear();
+        statusFilter.setValue("All");
+        sortByCombo.setValue("Name");
+        loadUsers();
     }
 
     /**
@@ -137,14 +163,15 @@ public class UserDashboardController {
         //show list
     }
 
+    /**
+     * Handle account deletion after click on delete account
+     */
     public void handleDeleteAccount() {
-        //go find the credentials inside the window with javafx stuff
         if (this.session.deleteAccount()) {
-            //print on UI account deleted
-            //navigate accordingly
+            navigateToLogin();
         }
         else {
-            //show error
+            showErrorMessage("Error deleting account");
         }
 
     }
@@ -194,6 +221,66 @@ public class UserDashboardController {
         // Set active button
         if (activeButton != null) {
             activeButton.setStyle(activeStyle);
+        }
+    }
+
+    /**
+     * Handle click on view account information
+     */
+    public void handleViewUserInfo() {
+
+    }
+
+    /**
+     * Load users with current filters
+     */
+    private void loadUsers() {
+        loadProfilesForPage(0);
+        updatePagination();
+    }
+
+    /**
+     * Load users for a specific page
+     */
+    private void loadProfilesForPage(int page) {
+        String search = searchField.getText();
+        String sortBy = getSortByValue();
+
+        List<UserProfile> profiles = session.findAllProfiles(search,sortBy,page,PAGE_SIZE);
+        profilesList.setAll(profiles);
+
+        int total = session.getTotalProfilesCount(search);
+        int start = page * PAGE_SIZE + 1;
+        int end = Math.min(start + profiles.size() - 1, total);
+
+        if (total == 0) {
+            totalUsersLabel.setText("No users found");
+        } else {
+            totalUsersLabel.setText(String.format("Showing %d-%d of %d users", start, end, total));
+        }
+    }
+
+    /**
+     * Update pagination control
+     */
+    private void updatePagination() {
+        String search = searchField.getText();
+        String status = statusFilter.getValue();
+        int total = session.getTotalProfilesCount(search);
+        int pageCount = (int) Math.ceil((double) total / PAGE_SIZE);
+        pagination.setPageCount(Math.max(1, pageCount));
+    }
+
+    /**
+     * Get sort by value for DAO
+     */
+    private String getSortByValue() {
+        String selected = sortByCombo.getValue();
+        if (selected == null) return "name";
+        switch (selected) {
+            case "Registration Date": return "registration";
+            case "Last Login": return "lastlogin";
+            default: return "name";
         }
     }
 }

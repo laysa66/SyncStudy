@@ -27,11 +27,35 @@
 
             <!-- Navigation -->
             <VBox spacing="5">
-                <Label text="PROFILE"
+                <Label text="ACCOUNT"
                        style="-fx-text-fill: #6c757d; -fx-font-size: 11px; -fx-padding: 10 20 5 20;"/>
 
-                <Button fx:id="profileButton" text="  ViewProfile"
+                <Button fx:id="profileButton" text="  View Profile"
                         onAction="#handleViewOwnProfile"
+                        prefWidth="220"
+                        style="-fx-background-color: #495057; -fx-text-fill: white; -fx-alignment: CENTER_LEFT; -fx-padding: 10 20; -fx-font-size: 13px;"/>
+                <!-- replace with profile picture eventually ? -->
+
+                <Button fx:id="userInfoButton" text="  View Account Information"
+                        onAction="#handleViewUserInfo"
+                        prefWidth="220"
+                        style="-fx-background-color: #495057; -fx-text-fill: white; -fx-alignment: CENTER_LEFT; -fx-padding: 10 20; -fx-font-size: 13px;"/>
+
+                <Button fx:id="updateButton" text="  Update Information"
+                        onAction="#handleUpdateProfile"
+                        prefWidth="220"
+                        style="-fx-background-color: #495057; -fx-text-fill: white; -fx-alignment: CENTER_LEFT; -fx-padding: 10 20; -fx-font-size: 13px;"/>
+
+                <Button fx:id="deleteAccountButton" text="  Delete Account"
+                        onAction="#handleDeleteAccount"
+                        prefWidth="220"
+                        style="-fx-background-color: #dc3545; -fx-text-fill: white; -fx-alignment: CENTER_LEFT; -fx-padding: 10 20; -fx-font-size: 13px;"/>
+
+                <Label text="OTHER USERS"
+                       style="-fx-text-fill: #6c757d; -fx-font-size: 11px; -fx-padding: 10 20 5 20;"/>
+
+                <Button fx:id="allProfilesButton" text="  View All Profiles"
+                        onAction="#handleViewOtherProfiles"
                         prefWidth="220"
                         style="-fx-background-color: #495057; -fx-text-fill: white; -fx-alignment: CENTER_LEFT; -fx-padding: 10 20; -fx-font-size: 13px;"/>
             </VBox>

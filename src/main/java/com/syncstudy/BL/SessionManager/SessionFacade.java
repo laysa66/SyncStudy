@@ -131,6 +131,17 @@ public class SessionFacade {
      * @return true if deletion issued correctly, false otherwise
      */
     public boolean deleteAccount() {
-        return this.userManager.deleteUser(this.loggedUserId);
+        boolean profileOk = this.profileManager.deleteProfile(this.loggedUserId);
+        boolean userOk = this.userManager.deleteUser(this.loggedUserId);
+        return (profileOk && userOk);
+    }
+
+    /**
+     * Get total profiles count for pagination
+     * @param searchQuery search term
+     * @return total count
+     */
+    public int getTotalProfilesCount(String searchQuery) {
+        return profileManager.getTotalProfilesCount(searchQuery);
     }
 }

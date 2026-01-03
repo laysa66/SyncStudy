@@ -12,4 +12,6 @@ public abstract class ProfileDAO {
     public abstract boolean updateProfile(Long profileId, Long userId, String firstname, String lastname);
     public abstract UserProfile findProfileByUserId(Long userId);
     public abstract List<UserProfile> findAllProfiles(String searchQuery, String sortBy, int page, int pageSize);
+    public abstract boolean deleteProfile(Long userId);
+    public abstract int getTotalProfilesCount(String searchQuery);
 }
