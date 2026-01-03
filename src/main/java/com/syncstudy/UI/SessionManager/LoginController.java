@@ -6,6 +6,7 @@ import com.syncstudy.BL.SessionManager.SessionFacade;
 import com.syncstudy.BL.SessionManager.User;
 import com.syncstudy.BL.SessionManager.UserManager;
 import com.syncstudy.UI.AdminManager.AdminDashboardController;
+import com.syncstudy.UI.ProfileManager.RegisterController;
 import com.syncstudy.UI.ProfileManager.UserDashboardController;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -116,6 +117,32 @@ public class LoginController {
 
         } catch (IOException e) {
             messageLabel.setText("Error loading dashboard: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Navigate to register page
+     */
+    private void navigateToRegister() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/syncstudy/UI/ProfileManager/register.fxml"));
+            Parent dashboard = loader.load();
+
+            // Set user ID in facade
+            RegisterController controller = loader.getController();
+            controller.setSession(userManager);
+
+            // Switch scene
+            Stage stage = (Stage) usernameField.getScene().getWindow();
+            stage.setScene(new Scene(dashboard));
+            stage.setTitle("SyncStudy - Sign up");
+            stage.setWidth(1100);
+            stage.setHeight(700);
+            stage.centerOnScreen();
+
+        } catch (IOException e) {
+            messageLabel.setText("Error loading register: " + e.getMessage());
             e.printStackTrace();
         }
     }

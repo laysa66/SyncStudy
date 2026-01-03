@@ -24,7 +24,6 @@ public class UserDashboardController {
     @FXML private Button profileButton;
     @FXML private Button userInfoButton;
     @FXML private Button logoutButton;
-    @FXML private Button createAccountButton;
     @FXML private Button submitUpdateButton;
     @FXML private Button deleteAccountButton;
     //change buttons
@@ -57,7 +56,7 @@ public class UserDashboardController {
     }
 
     /**
-     * Loads
+     * Loads an embedded window showing the logged user's own profile information
      * @param profile
      */
     public void showProfile(UserProfile profile) {
@@ -88,24 +87,6 @@ public class UserDashboardController {
         alert.setHeaderText(null);
         alert.setContentText(msg);
         alert.showAndWait();
-    }
-
-    public void handleCreateAccount() {
-        //go find the credentials inside the window with javafx stuff
-        String username = "";
-        String passwordhash = "";
-        String email = "";
-        String firstname = "";
-        String lastname = "";
-        String university = "";
-        String department = "";
-
-        if(this.session.createAccount(username, passwordhash, email, firstname, lastname, university, department)) {
-            //print on UI account created
-        }
-        else {
-            //show error
-        }
     }
 
     /**
@@ -187,7 +168,7 @@ public class UserDashboardController {
             // Switch scene
             Stage stage = (Stage) welcomeLabel.getScene().getWindow();
             stage.setScene(new Scene(dashboard));
-            stage.setTitle("SyncStudy - User Dashboard");
+            stage.setTitle("SyncStudy - Login");
             stage.setWidth(1100);
             stage.setHeight(700);
             stage.centerOnScreen();
