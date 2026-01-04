@@ -89,10 +89,6 @@ public class UpdateAccountController {
                 showError("Passwords do not match");
                 return;
             }
-            if (password.length() < 6) {
-                showError("Password must be at least 6 characters");
-                return;
-            }
             // Hash the new password
             passwordHash = BCrypt.hashpw(password,BCrypt.gensalt());
         }
@@ -105,7 +101,9 @@ public class UpdateAccountController {
 
             if (success) {
                 showSuccess("Account updated successfully!");
-                // Optionally close the form after a delay
+                if (dashboardController != null) {
+                    dashboardController.clearCenterPane();
+                }
             } else {
                 showError("Failed to update account");
             }
