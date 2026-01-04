@@ -4,8 +4,10 @@ package com.syncstudy.UI.SessionManager;
 import com.syncstudy.BL.AdminManager.AdminFacade;
 import com.syncstudy.BL.SessionManager.SessionFacade;
 import com.syncstudy.BL.SessionManager.User;
+import com.syncstudy.BL.SessionManager.User;
 import com.syncstudy.BL.SessionManager.UserManager;
 import com.syncstudy.UI.AdminManager.AdminDashboardController;
+import com.syncstudy.UI.ChatManager.ChatController;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -16,6 +18,7 @@ import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.net.URL;
 
 public class LoginController {
 
@@ -28,14 +31,18 @@ public class LoginController {
     @FXML
     private Label messageLabel;
 
+    @FXML
+    private Label errorLabel;
+
     private SessionFacade userManager;
+    private Runnable onLoginSuccess;
 
 
     // injected by AppUI after FXMLLoader.load()
     public void setUserManager(SessionFacade userManager) {
         this.userManager = userManager;
     }
-
+    public void setOnLoginSuccess(Runnable onLoginSuccess) {this.onLoginSuccess = onLoginSuccess;}
     @FXML
     private void onLogin() {
         if (userManager == null) {
@@ -48,13 +55,19 @@ public class LoginController {
         boolean ok = userManager.login(username, password);
         if (ok) {
             messageLabel.setText("Login successful");
+            User user = userManager.getCurrentUser();
+            // Navigate to chat page
+            if (onLoginSuccess != null) {
+                userManager.setCurrentUser(user);
+                onLoginSuccess.run();
+            }
 
             // Get user and check if admin
-            User user = UserManager.getInstance().findUserByUsername(username);
             if (user != null && user.isAdmin()) {
                 navigateToAdminDashboard(user);
             } else {
                 messageLabel.setText("Login successful! (Non-admin user)");
+                showChatPage();
                 // TODO: Navigate to regular user dashboard
             }
         } else {
@@ -88,9 +101,50 @@ public class LoginController {
         }
     }
 
+    private void showChatPage() {
+        try {
+            URL fxml = AppUI.class.getResource("/com/syncstudy/UI/chat.fxml");
+            if (fxml == null) {
+                throw new IllegalStateException("FXML resource not found: /com/syncstudy/UI/chat.fxml");
+            }
+
+            FXMLLoader loader = new FXMLLoader(fxml);
+            Parent root = loader.load();
+
+            ChatController chatController = loader.getController();
+
+            // Get logged-in user from SessionFacade
+            SessionFacade sessionFacade = SessionFacade.getInstance();
+            User currentUser = sessionFacade.getCurrentUser();
+
+            chatController.setCurrentUser(currentUser.getId(), currentUser.isAdmin());
+            chatController.startRealtime("localhost", 9000);
+
+            // Set a default group (you'll need to modify this based on your requirements)
+            // For now, using group ID 1 as an example
+            chatController.setCurrentGroup(1L);
+
+            Stage stage = (Stage) usernameField.getScene().getWindow();
+            stage.setTitle("SyncStudy - Chat");
+            stage.setScene(new Scene(root, 800, 600));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     private void setMessage(String msg) {
         if (messageLabel != null) {
             messageLabel.setText(msg);
         }
+    }
+
+    private void showError(String message) {
+        errorLabel.setText(message);
+        errorLabel.setVisible(true);
+    }
+
+    private void showSuccess(String message) {
+        // Show success toast notification
+        System.out.println(message);
     }
 }
