@@ -43,11 +43,17 @@ public class LoginController {
         this.userManager = userManager;
     }
     public void setOnLoginSuccess(Runnable onLoginSuccess) {this.onLoginSuccess = onLoginSuccess;}
+
+
     @FXML
     private void onLogin() {
         if (userManager == null) {
-            messageLabel.setText("Internal error: UserManager not available.");
-            return;
+            try {
+                userManager = SessionFacade.getInstance();
+            } catch (Exception e) {
+                setMessage("Internal error: UserManager not available.");
+                return;
+            }
         }
         String username = usernameField.getText();
         String password = passwordField.getText();
