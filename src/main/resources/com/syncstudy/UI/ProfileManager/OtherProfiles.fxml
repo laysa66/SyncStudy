@@ -6,7 +6,7 @@
 
 <BorderPane xmlns:fx="http://javafx.com/fxml/1"
             xmlns="http://javafx.com/javafx/21"
-            fx:controller="com.syncstudy.UI.ProfileManager.UserDashboardController"
+            fx:controller="com.syncstudy.UI.ProfileManager.OtherProfilesController"
             prefWidth="900" prefHeight="600"
             style="-fx-background-color: #f8f9fa;">
 
@@ -31,9 +31,6 @@
                            prefWidth="250"
                            style="-fx-font-size: 13px;"/>
 
-                <Label text="Status:"/>
-                <ComboBox fx:id="statusFilter" prefWidth="120"/>
-
                 <Label text="Sort by:"/>
                 <ComboBox fx:id="sortByCombo" prefWidth="150"/>
 
@@ -47,8 +44,9 @@
             <TableView fx:id="profilesTable" VBox.vgrow="ALWAYS"
                        style="-fx-background-color: white; -fx-border-color: #dee2e6; -fx-border-radius: 4;">
                 <columns>
-                    <TableColumn fx:id="selectColumn" text="" prefWidth="40" sortable="false"/>
                     <TableColumn fx:id="nameColumn" text="Name" prefWidth="150"/>
+                    <TableColumn fx:id="emailColumn" text="Email" prefWidth="250"/>
+                    <TableColumn fx:id="universityColumn" text="University / Dept" prefWidth="250"/>
                 </columns>
                 <placeholder>
                     <VBox alignment="CENTER" spacing="10">

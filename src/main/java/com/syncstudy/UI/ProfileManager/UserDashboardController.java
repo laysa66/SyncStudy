@@ -177,14 +177,28 @@ public class UserDashboardController {
         }
     }
 
+    /**
+     * Handle view other profiles - Load profiles list
+     */
+    @FXML
     public void handleViewOtherProfiles() {
-        //go find the search queries inside the window with javafx stuff
-        String searchQuery = "";
-        String sortBy = "";
-        int page = 0;
-        int pageSize = 0;
-        List<UserProfile> profiles = this.session.findAllProfiles(searchQuery, sortBy, page, pageSize);
-        //show list
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/syncstudy/UI/ProfileManager/OtherProfiles.fxml"));
+            Parent profilesView = loader.load();
+
+            // Get the controller
+            OtherProfilesController profilesController = loader.getController();
+            profilesController.setDashboardController(this);
+
+            // Load into center pane
+            mainPane.setCenter(profilesView);
+
+            // Update button styles
+            updateButtonStyles(allProfilesButton);
+        } catch (IOException e) {
+            showErrorMessage("Failed to load profiles: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
 
     /**
