@@ -110,24 +110,46 @@ public class UserDashboardController {
         }
     }
 
-    //todo: fix this
+    /**
+     * Handle account update - Load update form
+     */
+    @FXML
     public void handleUpdateAccount() {
-        showErrorMessage("Update account feature coming soon!");
-        // TODO: Load update form FXML similar to handleViewOwnProfile
-        // 1. Create UpdateAccountForm.fxml
-        // 2. Load it into mainPane.setCenter()
-        // 3. Get form data and call session.updateAccount()
-        /*
-        //go find the credentials inside the window with javafx stuff
-        String firstname = "";
-        String lastname = "";
-        if (this.session.updateAccount(username, passwordHash, email, firstname, lastname, university, department)) {
-            messageLabel.setText("Profile updated");
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/syncstudy/UI/ProfileManager/UpdateAccountForm.fxml"));
+            Parent updateForm = loader.load();
+
+            // Get the controller and pass current user data
+            UpdateAccountController updateController = loader.getController();
+            updateController.setDashboardController(this);
+
+            User currentUser = session.getCurrentUser();
+            UserProfile currentProfile = session.findProfile();
+
+            if (currentUser != null) {
+                updateController.setUser(currentUser, currentProfile);
+            } else {
+                showErrorMessage("Could not load user data");
+                return;
+            }
+
+            // Load into center pane
+            mainPane.setCenter(updateForm);
+
+            // Update button styles
+            updateButtonStyles(updateButton);
+        } catch (IOException e) {
+            showErrorMessage("Failed to load update form: " + e.getMessage());
+            e.printStackTrace();
         }
-        else {
-            showErrorMessage("Update failed");
-        }
-        */
+    }
+
+    /**
+     * Actually perform the account update (called by UpdateAccountController)
+     */
+    public boolean updateAccount(String username, String passwordHash, String email,
+                                 String firstname, String lastname, String university, String department) {
+        return session.updateAccount(username, passwordHash, email, firstname, lastname, university, department);
     }
 
     /**
