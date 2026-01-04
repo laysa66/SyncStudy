@@ -10,6 +10,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -41,6 +42,7 @@ public class OtherProfilesController {
     public void initialize() {
         session = SessionFacade.getInstance();
         profilesList = FXCollections.observableArrayList();
+        userCache = new HashMap<>();
 
         setupFilters();
         setupTable();
@@ -74,19 +76,29 @@ public class OtherProfilesController {
      * Setup table columns
      */
     private void setupTable() {
-        // Name column - show full name
+        // fullname
         nameColumn.setCellValueFactory(data ->
                 new SimpleStringProperty(data.getValue().getFullName()));
 
-        // Email column - need to get from User object
+        // Email
         emailColumn.setCellValueFactory(data -> {
-            // You'll need to enhance this - for now just show "-"
-            return new SimpleStringProperty("-");
+            User user = getUserDetails(data.getValue().getUserId());
+            String email = (user != null && user.getEmail() != null) ? user.getEmail() : "-";
+            return new SimpleStringProperty(email);
         });
 
-        // University column - need to get from User object
+        // University and dept
         universityColumn.setCellValueFactory(data -> {
-            // You'll need to enhance this - for now just show "-"
+            User user = getUserDetails(data.getValue().getUserId());
+            if (user != null) {
+                String university = user.getUniversity() != null ? user.getUniversity() : "";
+                String department = user.getDepartment() != null ? user.getDepartment() : "";
+                String combined = university;
+                if (!department.isEmpty()) {
+                    combined += (university.isEmpty() ? "" : " / ") + department;
+                }
+                return new SimpleStringProperty(combined.isEmpty() ? "-" : combined);
+            }
             return new SimpleStringProperty("-");
         });
 
@@ -126,6 +138,8 @@ public class OtherProfilesController {
      * Load profiles with current filters
      */
     private void loadProfiles() {
+        userCache.clear();
+        //cache is cleared when loading new data
         loadProfilesForPage(0);
         updatePagination();
     }
@@ -151,7 +165,7 @@ public class OtherProfilesController {
         profilesList.setAll(filteredProfiles);
 
         int total = session.getTotalProfilesCount(search);
-        // Subtract 1 for the current user
+        // Subtract 1 because we exclude current user
         total = Math.max(0, total - 1);
 
         int start = page * PAGE_SIZE + 1;
@@ -170,7 +184,7 @@ public class OtherProfilesController {
     private void updatePagination() {
         String search = searchField.getText();
         int total = session.getTotalProfilesCount(search);
-        // Subtract 1 for current user
+        // Subtract 1 because of current user
         total = Math.max(0, total - 1);
         int pageCount = (int) Math.ceil((double) total / PAGE_SIZE);
         pagination.setPageCount(Math.max(1, pageCount));
