@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<VBox xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.syncstudy.UI.GroupManager.GroupDetailsFrame" stylesheets="@group-styles.css">
+   <children>
+      <!-- Header -->
+      <HBox alignment="CENTER_LEFT" styleClass="group-details-header">
+         <children>
+            <Label fx:id="groupNameLabel" text="Nom du Groupe" textFill="WHITE">
+               <font>
+                  <Font name="System Bold" size="16.0" />
+               </font>
+            </Label>
+         </children>
+         <padding>
+            <Insets bottom="10.0" left="15.0" right="15.0" top="10.0" />
+         </padding>
+      </HBox>
+
+      <!-- Group Info -->
+      <VBox spacing="10.0">
+         <children>
+            <Label fx:id="categoryLabel" text="Catégorie: ">
+               <font>
+                  <Font name="System Bold" size="12.0" />
+               </font>
+            </Label>
+            <Label fx:id="memberCountLabel" text="Membres: " />
+            <Label fx:id="createdAtLabel" text="Créé le: " />
+         </children>
+         <padding>
+            <Insets bottom="10.0" left="15.0" right="15.0" top="10.0" />
+         </padding>
+      </VBox>
+
+      <!-- Description -->
+      <VBox VBox.vgrow="ALWAYS">
+         <children>
+            <Label text="Description:">
+               <font>
+                  <Font name="System Bold" size="12.0" />
+               </font>
+            </Label>
+            <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS">
+               <content>
+                  <TextArea fx:id="descriptionArea" wrapText="true" />
+               </content>
+            </ScrollPane>
+         </children>
+         <padding>
+            <Insets bottom="10.0" left="15.0" right="15.0" top="5.0" />
+         </padding>
+      </VBox>
+
+      <!-- Close Button -->
+      <HBox alignment="CENTER">
+         <children>
+            <Button fx:id="closeButton" onAction="#onClose" text="Fermer" />
+         </children>
+         <padding>
+            <Insets bottom="15.0" left="15.0" right="15.0" top="10.0" />
+         </padding>
+      </HBox>
+   </children>
+</VBox>

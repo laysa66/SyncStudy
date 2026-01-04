@@ -4,7 +4,6 @@ package com.syncstudy.UI.SessionManager;
 import com.syncstudy.BL.AdminManager.AdminFacade;
 import com.syncstudy.BL.SessionManager.SessionFacade;
 import com.syncstudy.BL.SessionManager.User;
-import com.syncstudy.BL.SessionManager.User;
 import com.syncstudy.BL.SessionManager.UserManager;
 import com.syncstudy.UI.AdminManager.AdminDashboardController;
 import com.syncstudy.UI.ChatManager.ChatController;
@@ -73,8 +72,9 @@ public class LoginController {
                 navigateToAdminDashboard(user);
             } else {
                 messageLabel.setText("Login successful! (Non-admin user)");
-                showChatPage();
-                // TODO: Navigate to regular user dashboard
+//                showChatPage();
+               // TODO: Navigate to regular user dashboard
+                navigateToUserDashboard(user);
             }
         } else {
             messageLabel.setText("Invalid username or password");
@@ -103,6 +103,28 @@ public class LoginController {
 
         } catch (IOException e) {
             messageLabel.setText("Error loading dashboard: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Navigate to user dashboard (GroupManager)
+     */
+    private void navigateToUserDashboard(User user) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/syncstudy/UI/GroupManager/GroupManager.fxml"));
+            Parent groupDashboard = loader.load();
+
+            // Switch scene
+            Stage stage = (Stage) usernameField.getScene().getWindow();
+            stage.setScene(new Scene(groupDashboard));
+            stage.setTitle("SyncStudy - Groupes d'étude");
+            stage.setWidth(1200);
+            stage.setHeight(800);
+            stage.centerOnScreen();
+
+        } catch (IOException e) {
+            messageLabel.setText("Error loading group dashboard: " + e.getMessage());
             e.printStackTrace();
         }
     }
