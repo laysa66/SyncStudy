@@ -328,9 +328,11 @@ public class UserDAOPostgres extends UserDAO {
         String sql = "SELECT id, username, password_hash, " +
                 "COALESCE(email, '') as email, " +
                 "COALESCE(full_name, '') as full_name, " +
+                "COALESCE(university, '') as university, " +
+                "COALESCE(department, '') as department, " +
                 "COALESCE(is_blocked, FALSE) as is_blocked, " +
                 "COALESCE(is_admin, FALSE) as is_admin " +
-                "FROM users WHERE username = ?";
+                "FROM users WHERE id = ?";
 
         try (Connection conn = dbConnection.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -345,6 +347,8 @@ public class UserDAOPostgres extends UserDAO {
                     user.setPasswordHash(rs.getString("password_hash"));
                     user.setEmail(rs.getString("email"));
                     user.setFullName(rs.getString("full_name"));
+                    user.setUniversity(rs.getString("university"));
+                    user.setDepartment(rs.getString("department"));
                     user.setBlocked(rs.getBoolean("is_blocked"));
                     user.setAdmin(rs.getBoolean("is_admin"));
                     return user;
