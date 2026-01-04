@@ -222,13 +222,6 @@ public class UserDashboardController {
     }
 
     /**
-     * Handle click on view account information
-     */
-    public void handleViewUserInfo() {
-
-    }
-
-    /**
      * Load users with current filters
      */
     private void loadUsers() {

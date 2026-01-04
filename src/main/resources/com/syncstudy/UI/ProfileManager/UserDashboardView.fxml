@@ -36,11 +36,6 @@
                         style="-fx-background-color: #495057; -fx-text-fill: white; -fx-alignment: CENTER_LEFT; -fx-padding: 10 20; -fx-font-size: 13px;"/>
                 <!-- replace with profile picture eventually ? -->
 
-                <Button fx:id="userInfoButton" text="  View Account Information"
-                        onAction="#handleViewUserInfo"
-                        prefWidth="220"
-                        style="-fx-background-color: #495057; -fx-text-fill: white; -fx-alignment: CENTER_LEFT; -fx-padding: 10 20; -fx-font-size: 13px;"/>
-
                 <Button fx:id="updateButton" text="  Update Information"
                         onAction="#handleUpdateAccount"
                         prefWidth="220"
