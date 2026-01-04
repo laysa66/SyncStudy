@@ -26,7 +26,7 @@ public class ProfileDAOPostgres extends ProfileDAO {
      */
     private void initializeDatabase() {
         try (Connection conn = dbConnection.getConnection()) {
-            dropTable(conn);
+            //dropTable(conn);
             createTableProfiles(conn);
             //bind test profiles to the test users ?
             createTestProfile(1L,"Admin","Admin");

@@ -111,6 +111,12 @@ public class UserDashboardController {
 
     //todo: fix this
     public void handleUpdateAccount() {
+        showErrorMessage("Update account feature coming soon!");
+        // TODO: Load update form FXML similar to handleViewOwnProfile
+        // 1. Create UpdateAccountForm.fxml
+        // 2. Load it into mainPane.setCenter()
+        // 3. Get form data and call session.updateAccount()
+        /*
         //go find the credentials inside the window with javafx stuff
         String firstname = "";
         String lastname = "";
@@ -120,14 +126,7 @@ public class UserDashboardController {
         else {
             showErrorMessage("Update failed");
         }
-    }
-
-    /**
-     * Handle Manage Users navigation
-     */
-    @FXML
-    public void handleManageUsers() {
-
+        */
     }
 
     /**
