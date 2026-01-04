@@ -40,16 +40,17 @@ public class OwnProfileController {
     }
 
     private void displayUserInfo() {
-        if (currentUser == null) return;
-
-        // Simple display logic
-        usernameLabel.setText(currentUser.getUsername());
-        fullnameLabel.setText(currentUser.getFullName());
-        emailLabel.setText(currentUser.getEmail());
-        universityLabel.setText(currentUser.getUniversity());
-        departmentLabel.setText(currentUser.getDepartment());
-        groupsCountLabel.setText("Is in "+currentUser.getGroupsCount()+" groups");
-
+        if (currentUser == null) {
+            System.out.println("ERROR: currentUser is null!");
+            return;
+        }
+        // Display
+        usernameLabel.setText("Username: " + (currentUser.getUsername() != null ? currentUser.getUsername() : "N/A"));
+        fullnameLabel.setText(currentUser.getFullName() != null ? currentUser.getFullName() : "N/A"); // Header already says "User"
+        emailLabel.setText("Email: " + (currentUser.getEmail() != null ? currentUser.getEmail() : "N/A"));
+        universityLabel.setText("University: " + (currentUser.getUniversity() != null ? currentUser.getUniversity() : "N/A"));
+        departmentLabel.setText("Department: " + (currentUser.getDepartment() != null ? currentUser.getDepartment() : "N/A"));
+        groupsCountLabel.setText("Is in " + currentUser.getGroupsCount() + " groups");
     }
 
     @FXML
