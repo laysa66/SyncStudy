@@ -2,6 +2,7 @@ package com.syncstudy.UI.ProfileManager;
 
 import com.syncstudy.BL.ProfileManager.UserProfile;
 import com.syncstudy.BL.SessionManager.SessionFacade;
+import com.syncstudy.BL.SessionManager.User;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -10,6 +11,7 @@ import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -29,6 +31,7 @@ public class OtherProfilesController {
     private UserDashboardController dashboardController;
     private SessionFacade session;
     private ObservableList<UserProfile> profilesList;
+    private Map<Long, User> userCache;
     private static final int PAGE_SIZE = 20;
 
     /**
@@ -88,6 +91,25 @@ public class OtherProfilesController {
         });
 
         profilesTable.setItems(profilesList);
+    }
+
+    /**
+     * Get user details for a given userId (with caching)
+     * @param userId the user ID
+     * @return User object or null
+     */
+    private User getUserDetails(Long userId) {
+        // Check cache first
+        if (userCache.containsKey(userId)) {
+            return userCache.get(userId);
+        }
+
+        // Fetch from database and cache
+        User user = session.findUserById(userId);
+        if (user != null) {
+            userCache.put(userId, user);
+        }
+        return user;
     }
 
     /**

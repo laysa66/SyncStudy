@@ -155,4 +155,8 @@ public class SessionFacade {
     public int getTotalProfilesCount(String searchQuery) {
         return profileManager.getTotalProfilesCount(searchQuery);
     }
+
+    public User findUserById(Long userId) {
+        return userManager.findUserById(userId);
+    }
 }
