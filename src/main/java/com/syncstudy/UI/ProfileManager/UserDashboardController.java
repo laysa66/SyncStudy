@@ -9,6 +9,7 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -272,5 +273,15 @@ public class UserDashboardController {
             case "Last Login": return "lastlogin";
             default: return "name";
         }
+    }
+
+    /**
+     * Clear the center pane (close embedded view)
+     */
+    public void clearCenterPane() {
+        VBox defaultView = new VBox();
+        defaultView.setAlignment(Pos.CENTER);
+        defaultView.getChildren().add(new Label("Select an option from the sidebar"));
+        mainPane.setCenter(defaultView);
     }
 }

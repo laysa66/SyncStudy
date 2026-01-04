@@ -55,7 +55,9 @@ public class OwnProfileController {
 
     @FXML
     private void onClose() {
-        Stage stage = (Stage) closeButton.getScene().getWindow();
-        stage.close();
+        // Since this is embedded, just clear the center pane
+        if (controller != null) {
+            controller.clearCenterPane();
+        }
     }
 }
