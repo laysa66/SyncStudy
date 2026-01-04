@@ -26,6 +26,7 @@ public class ProfileDAOPostgres extends ProfileDAO {
      */
     private void initializeDatabase() {
         try (Connection conn = dbConnection.getConnection()) {
+            dropTable(conn);
             createTableProfiles(conn);
             //bind test profiles to the test users ?
             createTestProfile(1L,"Admin","Admin");
@@ -39,6 +40,21 @@ public class ProfileDAOPostgres extends ProfileDAO {
     }
 
     /**
+     * Utility method to drop the table while testing
+     * @param conn database connection
+     */
+    private void dropTable(Connection conn) {
+        String sql = "DROP TABLE profiles";
+
+        try (Statement stmt = conn.createStatement()) {
+            stmt.execute(sql);
+            System.out.println("Table 'profiles' dropped.");
+        } catch (SQLException e) {
+            System.err.println("Error dropping table: " + e.getMessage());
+        }
+    }
+
+    /**
      * Create profiles table if it doesn't exist
      * @param conn database connection
      */
@@ -46,9 +62,13 @@ public class ProfileDAOPostgres extends ProfileDAO {
         // Create base table
         String sql = "CREATE TABLE IF NOT EXISTS profiles (" +
                 "id SERIAL PRIMARY KEY, " +
-                "user_id SERIAL, " +
+                "user_id INTEGER NOT NULL UNIQUE, " +
                 "firstname VARCHAR(255) NOT NULL, " +
-                "lastname VARCHAR(255) NOT NULL)";
+                "lastname VARCHAR(255) NOT NULL, " +
+                "CONSTRAINT fk_user " +
+                "FOREIGN KEY (user_id) " +
+                "REFERENCES users(id) " +
+                "ON DELETE CASCADE)";
 
         try (Statement stmt = conn.createStatement()) {
             stmt.execute(sql);
