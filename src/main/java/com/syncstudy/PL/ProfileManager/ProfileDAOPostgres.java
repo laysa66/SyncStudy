@@ -176,6 +176,14 @@ public class ProfileDAOPostgres extends ProfileDAO {
         return null;
     }
 
+    /**
+     * Find all profiles matching the query in the database
+     * @param searchQuery the serach query
+     * @param sortBy the filter selected
+     * @param page the number of pages
+     * @param pageSize the size of a page
+     * @return a list of all matching UserProfile objects
+     */
     public List<UserProfile> findAllProfiles(String searchQuery, String sortBy, int page, int pageSize) {
         List<UserProfile> profiles = new ArrayList<>();
 
@@ -277,7 +285,12 @@ public class ProfileDAOPostgres extends ProfileDAO {
         return 0;
     }
 
-
+    /**
+     * Utility method to get a UserProfile out of a ResultSet
+     * @param rs the resultSet
+     * @return a UserProfile filled with the ResultSet information
+     * @throws SQLException if an error occurs while querying the database
+     */
     private UserProfile mapResultSetToUserProfile(ResultSet rs) throws SQLException {
         UserProfile profile = new UserProfile();
         profile.setId(rs.getLong("id"));
@@ -287,6 +300,13 @@ public class ProfileDAOPostgres extends ProfileDAO {
         return profile;
     }
 
+    //todo: remove, testing method
+    /**
+     * Create test profiles for testing
+     * @param userId
+     * @param firstname
+     * @param lastname
+     */
     private void createTestProfile(Long userId, String firstname, String lastname) {
         try {
             String checkSql = "SELECT id FROM profiles WHERE user_id = ?";

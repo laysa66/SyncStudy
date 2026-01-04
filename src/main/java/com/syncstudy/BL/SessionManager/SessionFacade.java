@@ -156,6 +156,11 @@ public class SessionFacade {
         return profileManager.getTotalProfilesCount(searchQuery);
     }
 
+    /**
+     * Find a user by id
+     * @param userId the id used to find the user
+     * @return a corresponding User object
+     */
     public User findUserById(Long userId) {
         return userManager.findUserById(userId);
     }

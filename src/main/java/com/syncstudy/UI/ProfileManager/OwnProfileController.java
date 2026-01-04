@@ -39,6 +39,9 @@ public class OwnProfileController {
         displayUserInfo();
     }
 
+    /**
+     * Display user information
+     */
     private void displayUserInfo() {
         if (currentUser == null) {
             System.out.println("ERROR: currentUser is null!");

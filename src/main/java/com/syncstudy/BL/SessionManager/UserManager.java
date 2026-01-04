@@ -98,6 +98,17 @@ public class UserManager {
         return userDAO.findUserById(userId);
     }
 
+    /**
+     * Update a user with the given credentials
+     * @param userId the id of the user to update
+     * @param username the new username
+     * @param passwordHash the new password hash
+     * @param email the new email
+     * @param fullname the new name
+     * @param university the new university
+     * @param department the new department
+     * @return true if update successful, false otherwise
+     */
     public boolean updateUser(Long userId, String username, String passwordHash, String email, String fullname, String university, String department) {
         return userDAO.updateUser(userId, username,passwordHash,email,fullname,university,department);
     }

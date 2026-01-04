@@ -46,6 +46,9 @@ public class RegisterController {
         this.session = session;
     }
 
+    /**
+     * Gets information from a form to create an account
+     */
     public void handleCreateAccount() {
         //go find the credentials inside the window with javafx stuff
         String username = usernameField.getText();
@@ -87,6 +90,10 @@ public class RegisterController {
         }
     }
 
+    /**
+     * Utility method to display errors
+     * @param msg
+     */
     private void setMessage(String msg) {
         if (messageLabel != null) {
             messageLabel.setText(msg);
