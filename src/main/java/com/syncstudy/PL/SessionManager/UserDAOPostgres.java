@@ -359,6 +359,29 @@ public class UserDAOPostgres extends UserDAO {
         return null;
     }
 
+    @Override
+    public boolean updateUser(Long userId, String username, String passwordHash, String email, String fullname, String university, String department) {
+        String sql = "UPDATE users SET username=?, password_hash=?, email=?, full_name=?, university=?, department=? WHERE id=?";
+        try (Connection conn = this.dbConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, username);
+            pstmt.setString(2, passwordHash);
+            pstmt.setString(3, email);
+            pstmt.setString(4, fullname);
+            pstmt.setString(5, university);
+            pstmt.setString(6, department);
+            pstmt.setLong(7, userId);
+            int rows = pstmt.executeUpdate();
+            if (rows > 0) {
+                System.out.println("User '" + username + "' updated successfully.");
+            }
+            return rows > 0;
+        } catch (SQLException e) {
+            System.err.println("Error updating user: " + e.getMessage());
+            return false;
+        }
+    }
+
     /**
      * Fallback method using only basic columns
      */

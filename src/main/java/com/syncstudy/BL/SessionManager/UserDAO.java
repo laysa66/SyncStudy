@@ -50,4 +50,16 @@ public abstract class UserDAO {
      * @return User object if found, null otherwise
      */
     public abstract User findUserById(Long id);
+
+    /**
+     * Update a user's credentials
+     * @param username
+     * @param passwordHash
+     * @param email
+     * @param fullname
+     * @param university
+     * @param department
+     * @return
+     */
+    public abstract boolean updateUser(Long userId, String username, String passwordHash, String email, String fullname, String university, String department);
 }

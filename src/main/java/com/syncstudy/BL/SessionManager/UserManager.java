@@ -98,6 +98,8 @@ public class UserManager {
         return userDAO.findUserById(userId);
     }
 
-
+    public boolean updateUser(Long userId, String username, String passwordHash, String email, String fullname, String university, String department) {
+        return userDAO.updateUser(userId, username,passwordHash,email,fullname,university,department);
+    }
 
 }

@@ -100,7 +100,7 @@ public class SessionFacade {
      * @param lastname provided lastname
      * @return true if operation issued correctly, false otherwise
      */
-    public boolean updateProfile(String firstname, String lastname) {
+    public boolean updateAccount(String username, String passwordHash, String email, String firstname, String lastname, String university, String department) {
         Long userId = this.loggedUserId;
 
         UserProfile profile = this.profileManager.findProfileByUserId(userId);
@@ -111,7 +111,10 @@ public class SessionFacade {
         }
 
         Long profileId = this.profileManager.findProfileByUserId(userId).getId();
-        return profileManager.updateProfile(profileId,userId,firstname,lastname);
+        String fullname = firstname + " " + lastname;
+        boolean profileOk = profileManager.updateProfile(profileId,userId,firstname,lastname);
+        boolean userOk = userManager.updateUser(userId, username, passwordHash, email, fullname, university, department);
+        return (profileOk && userOk);
     }
 
     /**

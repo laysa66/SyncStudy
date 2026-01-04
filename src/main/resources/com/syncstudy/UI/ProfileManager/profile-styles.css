@@ -216,3 +216,8 @@
     -fx-font-size: 12px;
     -fx-text-fill: #adb5bd;
 }
+
+/* Header styles for OwnProfile */
+.user-info-header {
+    -fx-background-color: #28a745;
+}

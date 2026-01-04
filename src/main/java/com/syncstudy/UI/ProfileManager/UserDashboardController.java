@@ -81,24 +81,6 @@ public class UserDashboardController {
         loadUsers();
     }
 
-    /**
-     * Loads an embedded window showing the logged user's own profile information
-     * @param profile
-     */
-    public void showProfile(UserProfile profile) {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/syncstudy/UI/ProfileManager/OwnProfile.fxml"));
-            Parent profileView = loader.load();
-            mainPane.setCenter(profileView);
-
-            // Update button states
-            updateButtonStyles(profileButton);
-        } catch (IOException e) {
-            showErrorMessage("Failed to load profile: " + e.getMessage());
-            e.printStackTrace();
-        }
-    }
-
     public void showOtherProfiles(List<UserProfile> profiles) {
 
     }
@@ -127,11 +109,12 @@ public class UserDashboardController {
         }
     }
 
-    public void handleUpdateProfile() {
+    //todo: fix this
+    public void handleUpdateAccount() {
         //go find the credentials inside the window with javafx stuff
         String firstname = "";
         String lastname = "";
-        if (this.session.updateProfile(firstname, lastname)) {
+        if (this.session.updateAccount(username, passwordHash, email, firstname, lastname, university, department)) {
             messageLabel.setText("Profile updated");
         }
         else {
@@ -140,16 +123,35 @@ public class UserDashboardController {
     }
 
     /**
-     * Handles a click on ViewProfile button
+     * Handle Manage Users navigation
+     */
+    @FXML
+    public void handleManageUsers() {
+
+    }
+
+    /**
+     * Handles a click on View Profile button
      * Loads and shows the logged user's own profile
      */
     public void handleViewOwnProfile() {
-        UserProfile profile = this.session.findProfile();
-        if (profile != null) {
-            showProfile(profile);
-        }
-        else {
-            showErrorMessage("Profile not found");
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/syncstudy/UI/ProfileManager/OwnProfile.fxml"));
+            Parent profileView = loader.load();
+
+            // Get the controller and pass it the current user data
+            OwnProfileController profileController = loader.getController();
+            profileController.setController(this);
+            profileController.setUser(session.getCurrentUser());
+
+            // Load into center pane
+            mainPane.setCenter(profileView);
+
+            // Update button styles
+            updateButtonStyles(profileButton);
+        } catch (IOException e) {
+            showErrorMessage("Failed to load profile: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 
@@ -236,7 +238,7 @@ public class UserDashboardController {
     }
 
     /**
-     * Load users for a specific page
+     * Load profiles for a specific page
      */
     private void loadProfilesForPage(int page) {
         String search = searchField.getText();
