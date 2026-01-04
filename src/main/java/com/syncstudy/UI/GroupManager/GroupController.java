@@ -4,6 +4,8 @@ import com.syncstudy.BL.SessionManager.SessionFacade;
 import com.syncstudy.BL.GroupManager.GroupFacade;
 import com.syncstudy.BL.GroupManager.Group;
 import com.syncstudy.BL.GroupManager.Category;
+import com.syncstudy.BL.SessionManager.User;
+import com.syncstudy.UI.ChatManager.ChatController;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -148,6 +150,15 @@ public class GroupController {
             showError("Veuillez sélectionner un groupe.");
         }
     }
+    @FXML
+    public void onOpenChat() {
+        Group selectedGroup = groupsTable.getSelectionModel().getSelectedItem();
+        if (selectedGroup == null) {
+            showError("Veuillez sélectionner un groupe.");
+            return;
+        }
+        openChatForGroup(selectedGroup);
+    }
     
     // Simple methods for UI actions
     @FXML
@@ -181,7 +192,40 @@ public class GroupController {
             showError("Erreur lors de l'ouverture des détails: " + e.getMessage());
         }
     }
-    
+
+    private void openChatForGroup(Group selectedGroup) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/syncstudy/UI/chat.fxml"));
+            Parent root = loader.load();
+            Object ctrl = loader.getController();
+            if (!(ctrl instanceof ChatController)) {
+                showError("Chat controller not found.");
+                return;
+            }
+            ChatController chatController = (ChatController) ctrl;
+
+            SessionFacade sf = this.session != null ? this.session : SessionFacade.getInstance();
+            User currentUser = sf.getCurrentUser();
+            if (currentUser == null) {
+                showError("No logged-in user found.");
+                return;
+            }
+            chatController.setCurrentUser(currentUser.getId(), currentUser.isAdmin());
+            chatController.startRealtime("localhost", 9000);
+            chatController.setCurrentGroup(selectedGroup.getGroupId());
+
+            Stage stage = (Stage) groupsTable.getScene().getWindow();
+            stage.setTitle("SyncStudy - Chat (Group " + selectedGroup.getName() + ")");
+            stage.setScene(new Scene(root, 800, 600));
+            stage.centerOnScreen();
+        } catch (IOException e) {
+            showError("Failed to open chat: " + e.getMessage());
+        } catch (Exception e) {
+            showError("Error opening chat: " + e.getMessage());
+        }
+    }
+
+
     // Getter methods for shared access
     public SessionFacade getSession() {
         return session;

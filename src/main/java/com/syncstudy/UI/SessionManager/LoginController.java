@@ -72,8 +72,8 @@ public class LoginController {
                 navigateToAdminDashboard(user);
             } else {
                 messageLabel.setText("Login successful! (Non-admin user)");
-                showChatPage();
-                // TODO: Navigate to regular user dashboard
+//                showChatPage();
+               // TODO: Navigate to regular user dashboard
                 navigateToUserDashboard(user);
             }
         } else {
