@@ -56,8 +56,8 @@ public class UpdateAccountController {
         }
 
         if (currentProfile != null) {
-            firstnameField.setText(currentProfile.getFirstName() != null ? currentProfile.getFirstName() : "");
-            lastnameField.setText(currentProfile.getLastName() != null ? currentProfile.getLastName() : "");
+            firstnameField.setText(currentProfile.getFirstname() != null ? currentProfile.getFirstname() : "");
+            lastnameField.setText(currentProfile.getLastname() != null ? currentProfile.getLastname() : "");
         }
     }
 
