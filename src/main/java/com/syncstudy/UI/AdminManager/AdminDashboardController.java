@@ -1,6 +1,7 @@
 package com.syncstudy.UI.AdminManager;
 
 import com.syncstudy.BL.AdminManager.AdminFacade;
+import com.syncstudy.BL.SessionManager.UserManager;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -73,6 +74,7 @@ public class AdminDashboardController {
     @FXML
     public void handleLogout() {
         adminFacade.setCurrentAdminId(null);
+        UserManager.getInstance().logout();
         // Return to login screen
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/syncstudy/UI/login.fxml"));
