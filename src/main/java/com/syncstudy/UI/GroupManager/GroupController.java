@@ -6,6 +6,7 @@ import com.syncstudy.BL.GroupManager.Group;
 import com.syncstudy.BL.GroupManager.Category;
 import com.syncstudy.BL.SessionManager.User;
 import com.syncstudy.UI.ChatManager.ChatController;
+import com.syncstudy.WS.AppConfig;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -211,7 +212,7 @@ public class GroupController {
                 return;
             }
             chatController.setCurrentUser(currentUser.getId(), currentUser.isAdmin());
-            chatController.startRealtime("localhost", 9000);
+            chatController.startRealtime(AppConfig.getChatHost(), AppConfig.getChatPort());
             chatController.setCurrentGroup(selectedGroup.getGroupId());
 
             Stage stage = (Stage) groupsTable.getScene().getWindow();

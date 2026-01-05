@@ -49,9 +49,11 @@ public class TcpChatClient {
         running.set(true);
 
         readerThread = new Thread(() -> {
+            System.out.println("TcpChatClient reader thread started for " + host + ":" + port);
             try {
                 String line;
                 while (running.get() && (line = in.readLine()) != null) {
+                    System.out.println("Received line: " + line); // <-- ADD THIS
                     final String json = line;
                     try {
                         EventEnvelope env = gson.fromJson(json, EventEnvelope.class);

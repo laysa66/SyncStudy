@@ -7,6 +7,7 @@ import com.syncstudy.BL.SessionManager.User;
 import com.syncstudy.BL.SessionManager.UserManager;
 import com.syncstudy.UI.AdminManager.AdminDashboardController;
 import com.syncstudy.UI.ChatManager.ChatController;
+import com.syncstudy.WS.AppConfig;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -146,7 +147,7 @@ public class LoginController {
             User currentUser = sessionFacade.getCurrentUser();
 
             chatController.setCurrentUser(currentUser.getId(), currentUser.isAdmin());
-            chatController.startRealtime("localhost", 9000);
+            chatController.startRealtime(AppConfig.getChatHost(), AppConfig.getChatPort());
 
             // Set a default group (you'll need to modify this based on your requirements)
             // For now, using group ID 1 as an example
