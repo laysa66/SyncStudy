@@ -6,6 +6,8 @@ import com.syncstudy.BL.SessionManager.SessionFacade;
 import com.syncstudy.BL.SessionManager.User;
 import com.syncstudy.BL.SessionManager.UserManager;
 import com.syncstudy.UI.AdminManager.AdminDashboardController;
+import com.syncstudy.UI.ProfileManager.RegisterController;
+import com.syncstudy.UI.ProfileManager.UserDashboardController;
 import com.syncstudy.UI.ChatManager.ChatController;
 import com.syncstudy.WS.AppConfig;
 import javafx.fxml.FXML;
@@ -37,6 +39,10 @@ public class LoginController {
     private SessionFacade userManager;
     private Runnable onLoginSuccess;
 
+    @FXML
+    public void initialize() {
+        this.userManager = SessionFacade.getInstance(); // Always get the singleton
+    }
 
     // injected by AppUI after FXMLLoader.load()
     public void setUserManager(SessionFacade userManager) {
@@ -109,9 +115,62 @@ public class LoginController {
     }
 
     /**
-     * Navigate to user dashboard (GroupManager)
+     * Navigate to user dashboard
      */
     private void navigateToUserDashboard(User user) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/syncstudy/UI/ProfileManager/UserDashboardView.fxml"));
+            Parent dashboard = loader.load();
+
+            // Set user ID in facade
+            UserDashboardController controller = loader.getController();
+            controller.setCurrentUserId(user.getId());
+
+            // Switch scene
+            Stage stage = (Stage) usernameField.getScene().getWindow();
+            stage.setScene(new Scene(dashboard));
+            stage.setTitle("SyncStudy - User Dashboard");
+            stage.setWidth(1100);
+            stage.setHeight(700);
+            stage.centerOnScreen();
+
+        } catch (IOException e) {
+            messageLabel.setText("Error loading dashboard: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Navigate to register page
+     */
+    @FXML
+    private void navigateToRegister() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/syncstudy/UI/ProfileManager/register.fxml"));
+            Parent dashboard = loader.load();
+
+            // Set user ID in facade
+            RegisterController controller = loader.getController();
+            controller.setSession(userManager);
+
+            // Switch scene
+            Stage stage = (Stage) usernameField.getScene().getWindow();
+            stage.setScene(new Scene(dashboard));
+            stage.setTitle("SyncStudy - Sign up");
+            stage.setWidth(1100);
+            stage.setHeight(700);
+            stage.centerOnScreen();
+
+        } catch (IOException e) {
+            messageLabel.setText("Error loading register: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Navigate to user dashboard (GroupManager)
+     */
+    private void navigateToGroupsDashboard(User user) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/syncstudy/UI/GroupManager/GroupManager.fxml"));
             Parent groupDashboard = loader.load();
