@@ -64,8 +64,9 @@ public class SessionFacade {
         userManager.setCurrentUser(user);
     }
 
-    public void logout() {
+    public boolean logout() {
         userManager.setCurrentUser(null);
+        return true;
     }
 
     public boolean isLoggedIn() {

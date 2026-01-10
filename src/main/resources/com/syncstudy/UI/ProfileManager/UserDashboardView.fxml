@@ -53,6 +53,12 @@
                         onAction="#handleViewOtherProfiles"
                         prefWidth="220"
                         style="-fx-background-color: #495057; -fx-text-fill: white; -fx-alignment: CENTER_LEFT; -fx-padding: 10 20; -fx-font-size: 13px;"/>
+
+                <Button fx:id="backButton" text="  Go Back to Groups"
+                        onAction="#handleBackToGroups"
+                        prefWidth="220"
+                        style="-fx-background-color: #495057; -fx-text-fill: white; -fx-alignment: CENTER_LEFT; -fx-padding: 10 20; -fx-font-size: 13px;"/>
+
             </VBox>
 
             <Region VBox.vgrow="ALWAYS"/>

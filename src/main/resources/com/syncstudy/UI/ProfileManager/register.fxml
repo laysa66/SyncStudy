@@ -44,6 +44,7 @@
 
     <HBox spacing="10" alignment="CENTER_RIGHT">
         <Button text="Create Account" onAction="#handleCreateAccount" defaultButton="true"/>
+        <Button text="Back to Login" onAction="#navigateBackToLogin"/>
     </HBox>
 
     <Label fx:id="messageLabel" wrapText="true" style="-fx-text-fill: #b00020;"/>

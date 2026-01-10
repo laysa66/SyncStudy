@@ -4,16 +4,21 @@ import com.syncstudy.BL.ChatManager.ChatFacade;
 import com.syncstudy.BL.ChatManager.Message;
 import javafx.animation.PauseTransition;
 import javafx.application.Platform;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
+import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
- import javafx.util.Duration;
+import javafx.stage.Stage;
+import javafx.util.Duration;
 
+import java.io.IOException;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
@@ -33,6 +38,12 @@ public class ChatController {
 
     @FXML
     private Label errorLabel;
+
+    @FXML
+    private Label groupNameLabel;
+
+    @FXML
+    private Button backButton;
 
     private ChatFacade messageService;
     private Long currentUserId;
@@ -59,6 +70,22 @@ public class ChatController {
         });
     }
 
+    @FXML
+    private void handleBackToGroups(ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/syncstudy/UI/GroupManager/GroupManager.fxml"));
+            Parent root = loader.load();
+            Stage stage = (Stage) backButton.getScene().getWindow();
+            if (stage.getScene() != null) {
+                stage.getScene().setRoot(root);
+            } else {
+                stage.setScene(new javafx.scene.Scene(root));
+            }
+        } catch (IOException e) {
+            showError("Cannot open groups: " + e.getMessage());
+        }
+    }
+
     public void setCurrentUser(Long userId, boolean isAdmin) {
         this.currentUserId = userId;
         this.isAdmin = isAdmin;
@@ -66,7 +93,20 @@ public class ChatController {
 
     public void setCurrentGroup(Long groupId) {
         this.currentGroupId = groupId;
+        groupNameLabel.setText(getCurrentGroupName());
         loadMessages();
+    }
+
+    public Long getCurrentGroupId() {
+        return this.currentGroupId;
+    }
+
+    public String getCurrentGroupName() {
+        try {
+            return messageService.getGroupName(currentGroupId);
+        } catch (Exception e) {
+            return "Unknown Group";
+        }
     }
 
     private void loadMessages() {

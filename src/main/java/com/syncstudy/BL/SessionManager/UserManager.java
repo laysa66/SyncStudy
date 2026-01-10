@@ -93,9 +93,10 @@ public class UserManager {
     /**
      * Logout the current user
      */
-    public void logout() {
+    public boolean logout() {
         this.currentUser = null;
         System.out.println("User logged out successfully.");
+        return true;
     }
 
     /**

@@ -9,6 +9,7 @@ import com.syncstudy.UI.AdminManager.AdminDashboardController;
 import com.syncstudy.UI.ProfileManager.RegisterController;
 import com.syncstudy.UI.ProfileManager.UserDashboardController;
 import com.syncstudy.UI.ChatManager.ChatController;
+import com.syncstudy.WS.AppConfig;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -80,7 +81,7 @@ public class LoginController {
                 messageLabel.setText("Login successful! (Non-admin user)");
 //                showChatPage();
                // TODO: Navigate to regular user dashboard
-                navigateToUserDashboard(user);
+                navigateToGroupsDashboard(user);
             }
         } else {
             messageLabel.setText("Invalid username or password");
@@ -205,7 +206,7 @@ public class LoginController {
             User currentUser = sessionFacade.getCurrentUser();
 
             chatController.setCurrentUser(currentUser.getId(), currentUser.isAdmin());
-            chatController.startRealtime("localhost", 9000);
+            chatController.startRealtime(AppConfig.getChatHost(), AppConfig.getChatPort());
 
             // Set a default group (you'll need to modify this based on your requirements)
             // For now, using group ID 1 as an example
