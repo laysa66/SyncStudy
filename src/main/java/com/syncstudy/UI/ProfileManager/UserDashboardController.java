@@ -102,10 +102,11 @@ public class UserDashboardController {
      * Handles a click on the logout button
      */
     public void handleLogout() {
-        if(this.session.logout()) {
+        try {
+            this.session.logout();
             navigateToLogin();
         }
-        else {
+        catch(Exception e) {
             showErrorMessage("Logout failed");
         }
     }
