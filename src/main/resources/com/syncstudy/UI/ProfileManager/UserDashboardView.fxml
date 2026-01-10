@@ -75,9 +75,43 @@
 
     <!-- Main Content Area (loaded dynamically) -->
     <center>
-        <VBox alignment="CENTER" style="-fx-background-color: #f8f9fa;">
-            <Label text="Loading..." style="-fx-text-fill: #6c757d;"/>
-        </VBox>
+        <BorderPane>
+            <!-- Top Bar with Notification Bell -->
+            <top>
+                <HBox alignment="CENTER_RIGHT" style="-fx-background-color: #343a40; -fx-padding: 15 20;">
+                    <StackPane>
+                        <Button fx:id="notificationButton"
+                                onAction="#handleViewNotifications"
+                                text="N"
+                                prefWidth="50" prefHeight="40"
+                                style="-fx-background-color: #495057; -fx-cursor: hand; -fx-text-fill: #ffffff; -fx-font-size: 20px; -fx-font-weight: bold; -fx-background-radius: 8; -fx-border-radius: 8;">
+                        </Button>
+
+                        <!-- Red badge for unread count -->
+                        <StackPane fx:id="notificationBadge"
+                                   minWidth="22" minHeight="22"
+                                   maxWidth="22" maxHeight="22"
+                                   mouseTransparent="true"
+                                   style="-fx-background-color: #dc3545; -fx-background-radius: 11;"
+                                   StackPane.alignment="TOP_RIGHT">
+                            <StackPane.margin>
+                                <Insets top="-8" right="-8"/>
+                            </StackPane.margin>
+                            <Label fx:id="notificationCountLabel"
+                                   text="3"
+                                   style="-fx-text-fill: white; -fx-font-size: 10px; -fx-font-weight: bold;"/>
+                        </StackPane>
+                    </StackPane>
+                </HBox>
+            </top>
+
+            <!-- Content Area -->
+            <center>
+                <VBox alignment="CENTER" style="-fx-background-color: #f8f9fa;">
+                    <Label text="Loading..." style="-fx-text-fill: #6c757d;"/>
+                </VBox>
+            </center>
+        </BorderPane>
     </center>
 
 </BorderPane>

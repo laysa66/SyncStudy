@@ -4,6 +4,7 @@ import com.syncstudy.BL.AdminManager.AdminFacade;
 import com.syncstudy.BL.ProfileManager.UserProfile;
 import com.syncstudy.BL.SessionManager.SessionFacade;
 import com.syncstudy.BL.SessionManager.User;
+import com.syncstudy.UI.NotificationManager.NotificationCenterController;
 import com.syncstudy.UI.SessionManager.LoginController;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -13,7 +14,10 @@ import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
@@ -36,6 +40,10 @@ public class UserDashboardController {
     @FXML private VBox userInfo;
     @FXML private BorderPane mainPane;
     @FXML private VBox sidebar;
+
+    @FXML private Button notificationButton;
+    @FXML private StackPane notificationBadge;
+    @FXML private Label notificationCountLabel;
 
     private SessionFacade session;
 
@@ -64,7 +72,7 @@ public class UserDashboardController {
             //+this.session.getCurrentUser().getFullName()
         }
 
-        // Load other profiles by default
+        changeButtonAppearance();
     }
 
     public void showUserInfo(User user) {
@@ -203,6 +211,41 @@ public class UserDashboardController {
     }
 
     /**
+     * Handle view notifications - Load notifications list
+     */
+    @FXML
+    public void handleViewNotifications() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/syncstudy/UI/NotificationManager/NotificationCenter.fxml"));
+            Parent notifCenter = loader.load();
+
+            // Get the controller
+            NotificationCenterController notifCenterController = loader.getController();
+            notifCenterController.setDashboardController(this);
+
+            // Load into center pane
+            mainPane.setCenter(notifCenter);
+
+            // Update button styles
+            updateButtonStyles(allProfilesButton);
+        } catch (IOException e) {
+            showErrorMessage("Failed to load notification center: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Update the unread notifications count
+     * @param count the number we want to appear on the badge
+     * if number is 0, no badge appears
+     */
+    public void updateNotificationCount(int count) {
+        notificationCountLabel.setText(String.valueOf(count));
+        notificationBadge.setVisible(count > 0);
+        notificationBadge.setManaged(count > 0);
+    }
+
+    /**
      * Handle account deletion after click on delete account
      */
     public void handleDeleteAccount() {
@@ -320,5 +363,13 @@ public class UserDashboardController {
         defaultView.setAlignment(Pos.CENTER);
         defaultView.getChildren().add(new Label("Select an option from the sidebar"));
         mainPane.setCenter(defaultView);
+    }
+
+    private void changeButtonAppearance() {
+        ImageView icon = new ImageView(new Image(getClass().getResourceAsStream("/com/syncstudy/UI/NotificationManager/bell.png")));
+        icon.setFitWidth(24);
+        icon.setFitHeight(24);
+        notificationButton.setGraphic(icon);
+        notificationButton.setText("");
     }
 }
