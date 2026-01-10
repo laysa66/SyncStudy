@@ -245,7 +245,7 @@ public class UserDAOPostgres extends UserDAO {
                 }
             }
         } catch (SQLException e) {
-            System.err.println("Error finding user (basic): " + e.getMessage());
+            System.err.println("Error finding user: " + e.getMessage());
         }
 
         return null;

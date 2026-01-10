@@ -3,6 +3,7 @@ package com.syncstudy.BL;
 import com.syncstudy.BL.ProfileManager.ProfileDAO;
 import com.syncstudy.BL.SessionManager.UserDAO;
 import com.syncstudy.BL.AdminManager.AdminDAO;
+import com.syncstudy.BL.GroupManager.GroupDAO;
 
 /**
  * Abstract Factory for creating DAO instances
@@ -21,6 +22,12 @@ public abstract class AbstractFactory {
      * @return AdminDAO implementation
      */
     public abstract AdminDAO createAdminDAO();
+
+    /**
+     * Creates a GroupDAO instance
+     * @return GroupDAO implementation
+     */
+    public abstract GroupDAO createGroupDAO();
 
     /**
      * Creates a ProfileDAO instance

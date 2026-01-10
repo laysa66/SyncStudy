@@ -1,0 +1,9 @@
+/* Header styles for GroupManager */
+.group-manager-header {
+    -fx-background-color: #007bff;
+}
+
+/* Header styles for GroupDetails */
+.group-details-header {
+    -fx-background-color: #28a745;
+}

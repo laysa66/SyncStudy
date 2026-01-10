@@ -52,25 +52,26 @@ public class SessionFacade {
     }
 
     /**
-     * Logs out current user
-     * @return true if logout went well, false otherwise
-     */
-    public boolean logout() {
-        this.loggedUserId = null;
-        if (this.loggedUserId == null) {
-            return true;
-        }
-        return false;
-        //harmonize with Lysa's logout ?
-    }
-
-    /**
-     * Get the current logged user
-     * @return current User if found, null otherwise
+     * Get the current logged-in user
+     * @return the current User object
+     * @throws IllegalStateException if no user is logged in
      */
     public User getCurrentUser() {
-        return userManager.findUserById(this.loggedUserId);
+        return userManager.getCurrentUser();
     }
+
+    public void setCurrentUser(User user) {
+        userManager.setCurrentUser(user);
+    }
+
+    public void logout() {
+        userManager.setCurrentUser(null);
+    }
+
+    public boolean isLoggedIn() {
+        return userManager.getCurrentUser() != null;
+    }
+
 
     public void setLoggedUserId(Long loggedUserId) {
         this.loggedUserId = loggedUserId;

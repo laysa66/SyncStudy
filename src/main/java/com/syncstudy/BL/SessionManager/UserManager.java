@@ -8,13 +8,32 @@ import java.sql.SQLException;
  * Singleton UserManager handling user-related business logic
  */
 public class UserManager {
-    private static UserManager instance;
+    private static UserManager instance = new UserManager();
     private UserDAO userDAO;
-
+    private User currentUser;
     private UserManager() {
-        // Initialize with concrete factory (can be changed for other DB types)
-       AbstractFactory factory = new PostgresFactory();
-       this.userDAO = factory.createUserDAO();
+    }
+
+    /**
+     * Ensure the DAO (and any other resources) are initialized.
+     * Safe to call multiple times.
+     */
+    private void ensureInitialized() {
+        if (userDAO == null) {
+            synchronized (this) {
+                if (userDAO == null) {
+                    AbstractFactory factory = new PostgresFactory();
+                    this.userDAO = factory.createUserDAO();
+                }
+            }
+        }
+    }
+
+    /**
+     * Force initialization from application or server startup.
+     */
+    public static void init() {
+        instance.ensureInitialized();
     }
 
     /**
@@ -39,11 +58,44 @@ public class UserManager {
      * @return true if credentials are valid, false otherwise
      */
     public boolean checkCredentials(String username, String password) {
+        ensureInitialized();
         if (username == null || username.trim().isEmpty() ||
                 password == null || password.trim().isEmpty()) {
             return false;
         }
-        return userDAO.checkCredentials(username, password);
+        // First verify credentials
+        boolean valid = userDAO.checkCredentials(username, password);
+        if (!valid) {
+            return false;
+        }
+        User user = userDAO.findUserByUsername(username);
+        setCurrentUser(user);  // Set the current user after successful authentication
+        System.out.println("Current User : "+getCurrentUser());
+        return true;
+    }
+
+    /**
+     * Get the current logged-in user
+     * @return the current User object
+     * @throws IllegalStateException if no user is logged in
+     */
+    public User getCurrentUser() {
+        if (currentUser == null) {
+            throw new IllegalStateException("No user is currently logged in");
+        }
+        return currentUser;
+    }
+
+    public User setCurrentUser(User user) {
+        this.currentUser = user; return this.currentUser;
+    }
+
+    /**
+     * Logout the current user
+     */
+    public void logout() {
+        this.currentUser = null;
+        System.out.println("User logged out successfully.");
     }
 
     /**
