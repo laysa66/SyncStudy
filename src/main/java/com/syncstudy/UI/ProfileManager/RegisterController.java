@@ -99,4 +99,24 @@ public class RegisterController {
             messageLabel.setText(msg);
         }
     }
+
+    @FXML
+    private void navigateBackToLogin() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/syncstudy/UI/login.fxml"));
+            Parent login = loader.load();
+
+            Stage stage = (Stage) usernameField.getScene().getWindow();
+            stage.setScene(new Scene(login));
+            stage.setTitle("SyncStudy - Login");
+            stage.setWidth(1100);
+            stage.setHeight(700);
+            stage.centerOnScreen();
+
+        } catch (IOException e) {
+            setMessage("Error loading login: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
 }

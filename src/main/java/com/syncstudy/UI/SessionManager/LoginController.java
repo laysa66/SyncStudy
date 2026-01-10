@@ -81,7 +81,7 @@ public class LoginController {
                 messageLabel.setText("Login successful! (Non-admin user)");
 //                showChatPage();
                // TODO: Navigate to regular user dashboard
-                navigateToUserDashboard(user);
+                navigateToGroupsDashboard(user);
             }
         } else {
             messageLabel.setText("Invalid username or password");

@@ -47,6 +47,7 @@ public class UserDashboardController {
     @FXML private TableColumn<User, String> nameColumn;
     @FXML private Pagination pagination;
     @FXML private Label totalUsersLabel;
+    @FXML private Button backButton;
 
     private ObservableList<UserProfile> profilesList;
     private static final int PAGE_SIZE = 20;
@@ -107,6 +108,22 @@ public class UserDashboardController {
         }
         else {
             showErrorMessage("Logout failed");
+        }
+    }
+
+    @FXML
+    private void handleBackToGroups(ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/syncstudy/UI/GroupManager/GroupManager.fxml"));
+            Parent root = loader.load();
+            Stage stage = (Stage) backButton.getScene().getWindow();
+            if (stage.getScene() != null) {
+                stage.getScene().setRoot(root);
+            } else {
+                stage.setScene(new javafx.scene.Scene(root));
+            }
+        } catch (IOException e) {
+            showErrorMessage("Cannot open groups: " + e.getMessage());
         }
     }
 

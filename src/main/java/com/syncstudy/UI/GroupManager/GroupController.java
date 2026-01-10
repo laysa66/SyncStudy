@@ -6,6 +6,7 @@ import com.syncstudy.BL.GroupManager.Group;
 import com.syncstudy.BL.GroupManager.Category;
 import com.syncstudy.BL.SessionManager.User;
 import com.syncstudy.UI.ChatManager.ChatController;
+import com.syncstudy.UI.ProfileManager.UserDashboardController;
 import com.syncstudy.WS.AppConfig;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -173,6 +174,35 @@ public class GroupController {
         categoryFilter.setValue("Toutes");
         loadAllGroups();
     }
+
+    @FXML
+    private void onGoToProfile() {
+        try {
+            User currentUser = session.getCurrentUser();
+            if (currentUser == null) {
+                showError("No logged-in user found.");
+                return;
+            }
+
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/syncstudy/UI/ProfileManager/UserDashboardView.fxml"));
+            Parent dashboard = loader.load();
+
+            UserDashboardController controller = loader.getController();
+            controller.setCurrentUserId(currentUser.getId());
+
+            Stage stage = (Stage) groupsTable.getScene().getWindow();
+            stage.setScene(new Scene(dashboard));
+            stage.setTitle("SyncStudy - User Dashboard");
+            stage.setWidth(1100);
+            stage.setHeight(700);
+            stage.centerOnScreen();
+
+        } catch (IOException e) {
+            showError("Error loading user dashboard: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
     
     private void openGroupDetails(Group group) {
         try {
