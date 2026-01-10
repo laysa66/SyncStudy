@@ -95,6 +95,7 @@ public class ChatController {
         this.currentGroupId = groupId;
         groupNameLabel.setText(getCurrentGroupName());
         loadMessages();
+        initializeRealtimeConnection();
     }
 
     public Long getCurrentGroupId() {
@@ -344,6 +345,15 @@ public class ChatController {
             tcpClient.connect(this);
         } catch (Exception e) {
             showError("Realtime connect failed: " + e.getMessage());
+        }
+    }
+
+    private void initializeRealtimeConnection() {
+        if (tcpClient == null) {
+            String host = com.syncstudy.WS.AppConfig.getChatHost();
+            int port = com.syncstudy.WS.AppConfig.getChatPort();
+            System.out.println("Connecting to chat server: " + host + ":" + port);
+            startRealtime(host, port);
         }
     }
 
