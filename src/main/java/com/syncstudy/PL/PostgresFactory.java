@@ -31,4 +31,13 @@ public class PostgresFactory extends AbstractFactory {
     public GroupDAO createGroupDAO() {
         return new GroupDAOPostgres();
     }
+
+    @Override
+    public ProfileDAO createProfileDAO() {
+        return new ProfileDAOPostgres(); }
+
+    @Override
+    public CategoryDAO createCategoryDAO() {
+        return new CategoryDAOPostgres();
+    }
 }

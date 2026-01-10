@@ -29,4 +29,7 @@ public abstract class AbstractFactory {
      * @return GroupDAO implementation
      */
     public abstract GroupDAO createGroupDAO();
+
+    public abstract ProfileDAO createProfileDAO();
+    public abstract CategoryDAO createCategoryDAO();
 }

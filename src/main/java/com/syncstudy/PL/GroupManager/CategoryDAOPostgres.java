@@ -80,6 +80,26 @@ public class CategoryDAOPostgres extends CategoryDAO {
         }
     }
 
+    /**
+     * Synchronize the category_id sequence with the maximum existing ID
+     * This prevents duplicate key errors when inserting new categories
+     */
+    private void synchronizeCategorySequence() {
+        String sql = """
+            SELECT setval('categories_category_id_seq', 
+                          COALESCE((SELECT MAX(category_id) FROM categories), 0) + 1, 
+                          false)
+            """;
+
+        try (Connection conn = dbConnection.getConnection();
+             Statement stmt = conn.createStatement()) {
+            stmt.execute(sql);
+            System.out.println("Category sequence synchronized.");
+        } catch (SQLException e) {
+            System.err.println("Error synchronizing category sequence: " + e.getMessage());
+        }
+    }
+
     @Override
     public List<Category> getAllCategories() {
         List<Category> categories = new ArrayList<>();
@@ -140,9 +160,12 @@ public class CategoryDAOPostgres extends CategoryDAO {
 
     @Override
     public Category createCategory(Category category) {
+        // First, ensure the sequence is synchronized with existing data
+        synchronizeCategorySequence();
+
         String sql = """
-            INSERT INTO categories (name, description, icon, color, category_administrator_id, created_at, updated_at)
-            VALUES (?, ?, ?, ?, ?, NOW(), NOW())
+            INSERT INTO categories (category_id, name, description, icon, color, category_administrator_id, created_at, updated_at)
+            VALUES (nextval('categories_category_id_seq'), ?, ?, ?, ?, ?, NOW(), NOW())
             RETURNING category_id
             """;
 

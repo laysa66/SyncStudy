@@ -411,7 +411,7 @@ public class CategoryManagementController {
     private void showCannotDeleteDialog(Category category) {
         Dialog<ButtonType> dialog = new Dialog<>();
         dialog.setTitle("Category Cannot Be Deleted");
-        dialog.setHeaderText("⚠️ This category cannot be deleted");
+        dialog.setHeaderText("️ This category cannot be deleted");
 
         VBox content = new VBox(15);
         content.setPadding(new Insets(20));

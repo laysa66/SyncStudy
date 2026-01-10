@@ -71,12 +71,7 @@
         </TableView>
     </VBox>
 
-    <!-- Footer Info -->
-    <HBox alignment="CENTER" spacing="10"
-          style="-fx-background-color: #e9ecef; -fx-padding: 10; -fx-background-radius: 5;">
-        <Label text="💡 Tip: Assign groups to categories to organize your study groups effectively."
-               style="-fx-text-fill: #495057; -fx-font-size: 12px;"/>
-    </HBox>
+
 
 </VBox>
 
