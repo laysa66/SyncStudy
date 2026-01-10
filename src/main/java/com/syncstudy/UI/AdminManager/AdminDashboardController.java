@@ -22,6 +22,7 @@ public class AdminDashboardController {
     @FXML private BorderPane mainPane;
     @FXML private VBox sidebar;
     @FXML private Button usersButton;
+    @FXML private Button categoriesButton;
     @FXML private Label welcomeLabel;
 
     private AdminFacade adminFacade;
@@ -69,6 +70,24 @@ public class AdminDashboardController {
     }
 
     /**
+     * Handle Manage Categories navigation
+     */
+    @FXML
+    public void handleManageCategories() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/syncstudy/UI/GroupManager/CategoryManagement.fxml"));
+            Parent categoryManagement = loader.load();
+            mainPane.setCenter(categoryManagement);
+
+            // Update button states
+            updateButtonStyles(categoriesButton);
+        } catch (IOException e) {
+            showError("Failed to load Category Management: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    /**
      * Handle logout action
      */
     @FXML
@@ -95,6 +114,9 @@ public class AdminDashboardController {
         // Reset all buttons
         if (usersButton != null) {
             usersButton.setStyle(defaultStyle);
+        }
+        if (categoriesButton != null) {
+            categoriesButton.setStyle(defaultStyle);
         }
 
         // Set active button
