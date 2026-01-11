@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml/1"
+            xmlns="http://javafx.com/javafx/21"
+            fx:controller="com.syncstudy.UI.NotificationManager.NotificationCenterController"
+            prefWidth="900" prefHeight="600"
+            style="-fx-background-color: #f8f9fa;">
+
+    <!-- Header -->
+    <top>
+        <VBox style="-fx-background-color: #343a40; -fx-padding: 15;">
+            <Label text="Notification Center"
+                   style="-fx-text-fill: white; -fx-font-size: 24px; -fx-font-weight: bold;"/>
+            <Label text="See your notifications"
+                   style="-fx-text-fill: #adb5bd; -fx-font-size: 12px;"/>
+        </VBox>
+    </top>
+
+    <!-- Main Content -->
+    <center>
+        <VBox spacing="15" style="-fx-padding: 20;">
+
+            <!-- Filters Row -->
+            <HBox spacing="15" alignment="CENTER_LEFT">
+                <TextField fx:id="searchField"
+                           promptText="Search notifications by content or type..."
+                           prefWidth="250"
+                           style="-fx-font-size: 13px;"/>
+
+                <Label text="Sort by:"/>
+                <ComboBox fx:id="sortByCombo" prefWidth="150"/>
+
+                <Region HBox.hgrow="ALWAYS"/>
+
+                <Button text="Clear Filters" onAction="#handleClearFilters"
+                        style="-fx-background-color: #6c757d; -fx-text-fill: white;"/>
+            </HBox>
+
+            <!-- ScrollPane with VBox -->
+            <ScrollPane fx:id="notificationsScrollPane"
+                        VBox.vgrow="ALWAYS"
+                        fitToWidth="true"
+                        style="-fx-background-color: transparent; -fx-background: transparent;">
+                <content>
+                    <VBox fx:id="notificationsContainer"
+                          spacing="10"
+                          style="-fx-padding: 5;">
+                        <!-- Notification cards will be dynamically added here -->
+
+                        <!-- Placeholder when no notifications (visibility toggled in controller) -->
+                        <VBox fx:id="emptyPlaceholder"
+                              alignment="CENTER"
+                              spacing="10"
+                              style="-fx-padding: 40;">
+                            <Label text="No notifications found"
+                                   style="-fx-font-size: 16px; -fx-text-fill: #6c757d;"/>
+                            <Label text="Try adjusting your search or filters"
+                                   style="-fx-font-size: 12px; -fx-text-fill: #adb5bd;"/>
+                        </VBox>
+                    </VBox>
+                </content>
+            </ScrollPane>
+
+            <!-- Simplified footer -->
+            <HBox spacing="15" alignment="CENTER_LEFT">
+                <Label fx:id="totalNotificationsLabel" text="Showing 0 notifications"
+                       style="-fx-text-fill: #6c757d;"/>
+                <Region HBox.hgrow="ALWAYS"/>
+                <!-- Pagination removed - not needed for scrollable list -->
+            </HBox>
+
+        </VBox>
+    </center>
+
+</BorderPane>
