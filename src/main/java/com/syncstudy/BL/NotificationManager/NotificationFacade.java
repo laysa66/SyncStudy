@@ -40,4 +40,8 @@ public class NotificationFacade {
     public void markAsUnread(Long notifId) {
         notificationManager.updateNotificationStatus(notifId,false);
     }
+
+    public void deleteNotification(Long notifId) {
+        notificationManager.deleteNotification(notifId);
+    }
 }

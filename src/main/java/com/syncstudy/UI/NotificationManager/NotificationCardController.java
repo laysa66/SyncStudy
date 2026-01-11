@@ -73,7 +73,7 @@ public class NotificationCardController {
 
         // Configure read/unread appearance
         if (notification.isReadStatus()) {
-            // READ: white background, normal text, no dot, hide "Mark as Read" button
+            // read
             cardContainer.getStyleClass().remove("notification-card-unread");
             cardContainer.getStyleClass().add("notification-card");
             notificationText.getStyleClass().remove("notification-content-unread");
@@ -85,7 +85,7 @@ public class NotificationCardController {
             markUnreadButton.setVisible(true);
             markUnreadButton.setManaged(true);
         } else {
-            // UNREAD: blue background, bold text, blue dot, show "Mark as Read" button
+            // unread
             cardContainer.getStyleClass().remove("notification-card");
             cardContainer.getStyleClass().add("notification-card-unread");
             notificationText.getStyleClass().remove("notification-content");
@@ -155,7 +155,7 @@ public class NotificationCardController {
     }
 
     /**
-     * Format timestamp to "X hours ago" format
+     * Change timestamp format to "X hours ago"
      */
     private String formatTimestamp(LocalDateTime timestamp) {
         if (timestamp == null) return "Unknown time";
@@ -180,7 +180,7 @@ public class NotificationCardController {
     }
 
     /**
-     * Handle "Mark as Read" button click
+     * Handle mark as read button click
      */
     @FXML
     private void handleMarkAsRead() {
@@ -195,20 +195,20 @@ public class NotificationCardController {
         // Refresh UI
         updateUI();
 
-        // Optionally refresh parent list to update counts
+        // Optionally refresh parent list (update counts)
         if (parentController != null) {
             parentController.loadNotificationCards();
         }
     }
 
     /**
-     * Handle "Mark as Unread" button click
+     * Handle mark as unread button click
      */
     @FXML
     private void handleMarkAsUnread() {
         if (notification == null) return;
 
-        // Update notification status in backend
+        // Update notification status
         notificationFacade.markAsUnread(notification.getId());
 
         // Update local object
@@ -217,20 +217,20 @@ public class NotificationCardController {
         // Refresh UI
         updateUI();
 
-        // Optionally refresh parent list to update counts
+        // Optionally refresh parent list (update counts)
         if (parentController != null) {
             parentController.loadNotificationCards();
         }
     }
 
     /**
-     * Handle "Delete" button click
+     * Handle delete button click
      */
     @FXML
     private void handleDelete() {
         if (notification == null) return;
 
-        // Delete notification in backend
+        // Delete notification
         notificationFacade.deleteNotification(notification.getId());
 
         // Refresh parent list to remove this card
