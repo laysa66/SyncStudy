@@ -31,7 +31,7 @@ public class NotificationDAOPostgres extends NotificationDAO {
 
     private void createTestNotif(long userId, String type, String content, long relatedEntityId) {
         try {
-            String checkSql = "SELECT id FROM notifications WHERE user_id = ? AND type = ? and content = ? and relatedEntityId = ?";
+            String checkSql = "SELECT id FROM notifications WHERE user_id = ? AND type = ? and content = ? and related_entity_id = ?";
             try (Connection conn = this.dbConnection.getConnection();
                  PreparedStatement pstmt = conn.prepareStatement(checkSql)) {
                 pstmt.setLong(1, userId);
