@@ -37,10 +37,10 @@ public class NotificationDAOPostgres extends NotificationDAO {
                 pstmt.setLong(1, userId);
                 pstmt.setString(2, type);
                 pstmt.setString(3, content);
-                pstmt.setLong(2, relatedEntityId);
+                pstmt.setLong(4, relatedEntityId);
                 try (ResultSet rs = pstmt.executeQuery()) {
                     if (rs.next()) {
-                        return; // Profile already exists
+                        return; // notif already exists
                     }
                 }
             }
@@ -95,7 +95,7 @@ public class NotificationDAOPostgres extends NotificationDAO {
 
     @Override
     public boolean updateNotification(Long notifId, boolean readStatus) {
-        String sql = "UPDATE notifications SET read_status=?, WHERE id=?";
+        String sql = "UPDATE notifications SET read_status=? WHERE id=?";
         try (Connection conn = this.dbConnection.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setBoolean(1, readStatus);
@@ -176,9 +176,6 @@ public class NotificationDAOPostgres extends NotificationDAO {
                 sql.append("ORDER BY timestamp DESC ");
                 break;
         }
-
-        // Add pagination
-        sql.append("LIMIT ? OFFSET ?");
 
         try (Connection conn = dbConnection.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql.toString())) {
