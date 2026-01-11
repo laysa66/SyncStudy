@@ -83,7 +83,7 @@ public class NotificationCenterController {
 
         // Clear existing cards
         notificationsContainer.getChildren().clear();
-        
+
         notificationsList.setAll(notifs);
 
         // Update display

@@ -32,4 +32,12 @@ public class NotificationFacade {
     public List<Notification> findUserNotifications(Long userId, String search, String sortBy, String statusFilter) {
         return notificationManager.findUserNotifications(userId,search,sortBy,statusFilter);
     }
+
+    public void markAsRead(Long notifId) {
+        notificationManager.updateNotificationStatus(notifId,true);
+    }
+
+    public void markAsUnread(Long notifId) {
+        notificationManager.updateNotificationStatus(notifId,false);
+    }
 }

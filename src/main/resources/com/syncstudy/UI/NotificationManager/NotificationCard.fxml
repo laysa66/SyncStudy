@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.shape.Circle?>
+
+<HBox xmlns:fx="http://javafx.com/fxml/1"
+      xmlns="http://javafx.com/javafx/21"
+      fx:controller="com.syncstudy.UI.NotificationManager.NotificationCardController"
+      fx:id="cardContainer"
+      styleClass="notification-card"
+      spacing="12"
+      alignment="CENTER_LEFT"
+      style="-fx-padding: 12 15;">
+
+    <!-- Checkbox for Bulk Selection -->
+    <CheckBox fx:id="selectCheckBox" styleClass="notification-checkbox"/>
+
+    <!-- Blue Dot Indicator (only visible for unread) -->
+    <Circle fx:id="unreadIndicator" styleClass="unread-indicator" visible="false" managed="false"/>
+
+    <!-- Notification Icon (40x40 circular) -->
+    <StackPane fx:id="notificationIcon" styleClass="notification-icon">
+        <Label fx:id="iconSymbol" styleClass="notification-icon-symbol" text="📬"/>
+    </StackPane>
+
+    <!-- Notification Content -->
+    <VBox spacing="4" HBox.hgrow="ALWAYS">
+        <!-- Notification Text (2 lines max with ellipsis) -->
+        <Label fx:id="notificationText"
+               styleClass="notification-content"
+               wrapText="true"
+               maxHeight="42"
+               text="Sample notification content that might be quite long and will truncate after two lines with an ellipsis"/>
+
+        <!-- Timestamp -->
+        <Label fx:id="timestampLabel"
+               styleClass="notification-timestamp"
+               text="2 hours ago"/>
+    </VBox>
+
+    <!-- Action Buttons -->
+    <HBox spacing="8" alignment="CENTER_RIGHT">
+        <!-- Mark as Read Button (only visible for unread) -->
+        <Button fx:id="markReadButton"
+                text="Mark as Read"
+                styleClass="notification-action-button, notification-btn-mark-read"
+                onAction="#handleMarkAsRead"
+                visible="true"/>
+
+        <!-- Mark as Unread Button (only visible for read) -->
+        <Button fx:id="markUnreadButton"
+                text="Mark as Unread"
+                styleClass="notification-action-button, notification-btn-mark-read"
+                onAction="#handleMarkAsUnread"
+                visible="false"/>
+
+        <!-- Delete Button -->
+        <Button fx:id="deleteButton"
+                text="Delete"
+                styleClass="notification-action-button, notification-btn-delete"
+                onAction="#handleDelete"/>
+    </HBox>
+
+</HBox>

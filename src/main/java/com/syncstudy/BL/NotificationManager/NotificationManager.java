@@ -51,6 +51,9 @@ public class NotificationManager {
         return notificationDAO.findUserNotifications(userId,searchQuery,sortBy,statusFilter);
     }
 
+    public void updateNotificationStatus(Long notifId,boolean readStatus) {
+        notificationDAO.updateNotification(notifId,readStatus);
+    }
 
 
 }

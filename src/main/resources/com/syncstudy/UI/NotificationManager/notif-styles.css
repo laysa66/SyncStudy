@@ -1,0 +1,306 @@
+/* SyncStudy Notification Styles */
+
+/* General */
+.root {
+    -fx-font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+}
+
+/* Notification Card Base */
+.notification-card {
+    -fx-background-color: white;
+    -fx-border-color: #dee2e6;
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
+    -fx-padding: 12 15;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 2, 0, 0, 1);
+}
+
+.notification-card:hover {
+    -fx-background-color: #f5f5f5;
+}
+
+/* Unread Notification Card */
+.notification-card-unread {
+    -fx-background-color: #e3f2fd;
+    -fx-border-color: #2196f3;
+    -fx-border-width: 0 0 0 4;
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
+    -fx-padding: 12 15;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(33,150,243,0.15), 3, 0, 0, 1);
+}
+
+.notification-card-unread:hover {
+    -fx-background-color: #bbdefb;
+}
+
+/* Blue Dot Indicator for Unread */
+.unread-indicator {
+    -fx-background-color: #2196f3;
+    -fx-background-radius: 50%;
+    -fx-min-width: 8px;
+    -fx-max-width: 8px;
+    -fx-min-height: 8px;
+    -fx-max-height: 8px;
+}
+
+/* Notification Icons (40x40) */
+.notification-icon {
+    -fx-min-width: 40px;
+    -fx-max-width: 40px;
+    -fx-min-height: 40px;
+    -fx-max-height: 40px;
+    -fx-background-radius: 50%;
+    -fx-alignment: center;
+}
+
+/* Icon Types with Colors */
+.notification-icon-message {
+    -fx-background-color: #007bff;
+}
+
+.notification-icon-file {
+    -fx-background-color: #28a745;
+}
+
+.notification-icon-calendar {
+    -fx-background-color: #ffc107;
+}
+
+.notification-icon-user {
+    -fx-background-color: #17a2b8;
+}
+
+.notification-icon-alert {
+    -fx-background-color: #dc3545;
+}
+
+.notification-icon-default {
+    -fx-background-color: #6c757d;
+}
+
+/* Icon Symbol (the actual icon/glyph inside the circle) */
+.notification-icon-symbol {
+    -fx-text-fill: white;
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+}
+
+/* Notification Content Text */
+.notification-content {
+    -fx-font-size: 13px;
+    -fx-text-fill: #212529;
+    -fx-line-spacing: 2px;
+}
+
+.notification-content-unread {
+    -fx-font-size: 13px;
+    -fx-text-fill: #212529;
+    -fx-font-weight: bold;
+    -fx-line-spacing: 2px;
+}
+
+/* Truncate text to 2 lines max with ellipsis */
+.notification-text {
+    -fx-max-height: 42px; /* Approximately 2 lines */
+    -fx-text-overrun: ellipsis;
+    -fx-wrap-text: true;
+}
+
+/* Timestamp */
+.notification-timestamp {
+    -fx-font-size: 11px;
+    -fx-text-fill: #6c757d;
+    -fx-padding: 2 0 0 0;
+}
+
+/* Checkbox for Bulk Selection */
+.notification-checkbox {
+    -fx-cursor: hand;
+}
+
+.notification-checkbox .box {
+    -fx-background-color: white;
+    -fx-border-color: #ced4da;
+    -fx-border-width: 2;
+    -fx-border-radius: 3;
+    -fx-background-radius: 3;
+}
+
+.notification-checkbox:selected .box {
+    -fx-background-color: #007bff;
+    -fx-border-color: #007bff;
+}
+
+.notification-checkbox:hover .box {
+    -fx-border-color: #007bff;
+}
+
+/* Action Buttons on Card */
+.notification-action-button {
+    -fx-background-color: transparent;
+    -fx-text-fill: #6c757d;
+    -fx-font-size: 12px;
+    -fx-cursor: hand;
+    -fx-padding: 4 10;
+    -fx-background-radius: 4;
+    -fx-border-color: #ced4da;
+    -fx-border-width: 1;
+    -fx-border-radius: 4;
+}
+
+.notification-action-button:hover {
+    -fx-background-color: #f8f9fa;
+    -fx-border-color: #adb5bd;
+}
+
+/* Mark as Read Button */
+.notification-btn-mark-read {
+    -fx-text-fill: #007bff;
+    -fx-border-color: #007bff;
+}
+
+.notification-btn-mark-read:hover {
+    -fx-background-color: #e3f2fd;
+    -fx-border-color: #0056b3;
+    -fx-text-fill: #0056b3;
+}
+
+/* Delete Button */
+.notification-btn-delete {
+    -fx-text-fill: #dc3545;
+    -fx-border-color: #dc3545;
+}
+
+.notification-btn-delete:hover {
+    -fx-background-color: #f8d7da;
+    -fx-border-color: #bd2130;
+    -fx-text-fill: #bd2130;
+}
+
+/* Badges for notification types */
+.notification-type-badge {
+    -fx-padding: 2 6;
+    -fx-background-radius: 3;
+    -fx-font-size: 10px;
+    -fx-font-weight: bold;
+    -fx-text-fill: white;
+}
+
+.notification-type-message {
+    -fx-background-color: #007bff;
+}
+
+.notification-type-file {
+    -fx-background-color: #28a745;
+}
+
+.notification-type-calendar {
+    -fx-background-color: #ffc107;
+    -fx-text-fill: #212529;
+}
+
+.notification-type-user {
+    -fx-background-color: #17a2b8;
+}
+
+.notification-type-alert {
+    -fx-background-color: #dc3545;
+}
+
+/* Header for Notification Center */
+.notification-center-header {
+    -fx-background-color: #343a40;
+}
+
+/* Empty State for Notifications */
+.notification-empty-state {
+    -fx-alignment: center;
+    -fx-padding: 60 20;
+}
+
+.notification-empty-icon {
+    -fx-font-size: 64px;
+    -fx-text-fill: #adb5bd;
+}
+
+.notification-empty-title {
+    -fx-font-size: 18px;
+    -fx-text-fill: #6c757d;
+    -fx-padding: 10 0 5 0;
+}
+
+.notification-empty-subtitle {
+    -fx-font-size: 13px;
+    -fx-text-fill: #adb5bd;
+}
+
+/* ScrollPane for notifications */
+.notification-scroll-pane {
+    -fx-background-color: transparent;
+    -fx-background: transparent;
+}
+
+.notification-scroll-pane .viewport {
+    -fx-background-color: transparent;
+}
+
+.notification-scroll-pane .scroll-bar:vertical {
+    -fx-background-color: #f8f9fa;
+}
+
+.notification-scroll-pane .scroll-bar:vertical .thumb {
+    -fx-background-color: #ced4da;
+    -fx-background-radius: 4;
+}
+
+.notification-scroll-pane .scroll-bar:vertical .thumb:hover {
+    -fx-background-color: #adb5bd;
+}
+
+/* Buttons */
+.btn-primary {
+    -fx-background-color: #007bff;
+    -fx-text-fill: white;
+    -fx-cursor: hand;
+    -fx-padding: 8 16;
+    -fx-background-radius: 4;
+}
+
+.btn-primary:hover {
+    -fx-background-color: #0056b3;
+}
+
+.btn-secondary {
+    -fx-background-color: #6c757d;
+    -fx-text-fill: white;
+    -fx-cursor: hand;
+    -fx-padding: 8 16;
+    -fx-background-radius: 4;
+}
+
+.btn-secondary:hover {
+    -fx-background-color: #545b62;
+}
+
+/* Form Controls */
+.text-field {
+    -fx-padding: 8 12;
+    -fx-border-color: #ced4da;
+    -fx-border-radius: 4;
+    -fx-background-radius: 4;
+}
+
+.text-field:focused {
+    -fx-border-color: #80bdff;
+    -fx-effect: dropshadow(gaussian, rgba(0,123,255,0.25), 4, 0, 0, 0);
+}
+
+.combo-box {
+    -fx-padding: 6 12;
+    -fx-border-color: #ced4da;
+    -fx-border-radius: 4;
+    -fx-background-radius: 4;
+}
