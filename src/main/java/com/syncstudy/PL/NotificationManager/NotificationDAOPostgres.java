@@ -143,7 +143,7 @@ public class NotificationDAOPostgres extends NotificationDAO {
     }
 
     @Override
-    public List<Notification> findUserNotifications(Long userId, String searchQuery, String sortBy, String statusFilter, int page, int pageSize) {
+    public List<Notification> findUserNotifications(Long userId, String searchQuery, String sortBy, String statusFilter) {
         List<Notification> notifications = new ArrayList<>();
 
         StringBuilder sql = new StringBuilder(
@@ -194,10 +194,6 @@ public class NotificationDAOPostgres extends NotificationDAO {
                 pstmt.setString(paramIndex++, searchPattern);
                 pstmt.setString(paramIndex++, searchPattern);
             }
-
-            // Set pagination parameters
-            pstmt.setInt(paramIndex++, pageSize);
-            pstmt.setInt(paramIndex, page * pageSize);
 
             try (ResultSet rs = pstmt.executeQuery()) {
                 while (rs.next()) {

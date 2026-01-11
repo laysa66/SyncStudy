@@ -1,5 +1,6 @@
 package com.syncstudy.BL;
 
+import com.syncstudy.BL.NotificationManager.NotificationDAO;
 import com.syncstudy.BL.ProfileManager.ProfileDAO;
 import com.syncstudy.BL.SessionManager.UserDAO;
 import com.syncstudy.BL.AdminManager.AdminDAO;
@@ -34,4 +35,10 @@ public abstract class AbstractFactory {
      * @return ProfileDA implementation
      */
     public abstract ProfileDAO createProfileDAO();
+
+    /**
+     * Creates a NotificationDAO instance
+     * @return NotificationDAO implementation
+     */
+    public abstract NotificationDAO createNotificationDAO();
 }

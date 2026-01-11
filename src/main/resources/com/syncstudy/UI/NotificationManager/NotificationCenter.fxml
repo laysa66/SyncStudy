@@ -31,6 +31,9 @@
                            prefWidth="250"
                            style="-fx-font-size: 13px;"/>
 
+                <Label text="Status:"/>
+                <ComboBox fx:id="statusFilter" prefWidth="120"/>
+
                 <Label text="Sort by:"/>
                 <ComboBox fx:id="sortByCombo" prefWidth="150"/>
 
